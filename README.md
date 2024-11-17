@@ -1,95 +1,136 @@
-# StudAI - Quiz Creator for YouTube Using AI
+# StudAI - AI Powered Quiz Creator
 
-**StudAI** is a platform that generates customizable quizzes based on YouTube video content using AI. This backend handles YouTube API integration to fetch video transcripts, processes the data using an AI service to generate quiz questions, and provides endpoints to customize, retrieve, and manage quizzes.
+This repository contains the **general backend** for the **StudAI** project, which powers an AI-driven quiz creation platform. The backend handles core functionalities like data persistence, user authentication, and payment gateway integration. Quiz generation is offloaded to the [studai-assistant](https://github.com/kenzokomati/studai-assistant) microservice, accessed seamlessly through this backend.
+
+---
 
 ## Features
 
-- **YouTube API Integration**: Fetches video transcripts using the YouTube API.
-- **AI-Powered Question Generation**: Uses AI to generate quiz questions based on the video transcription.
-- **Quiz Customization**: Configure the number of questions, difficulty, and types of questions (Multiple Choice, True/False, Short Answer).
-- **RESTful API**: Exposes endpoints for creating, retrieving, and managing quizzes.
-- **Persistence Layer**: Stores generated quizzes and user preferences using a database.
-- **User Authentication (Optional)**: Secures access to quiz management endpoints using Spring Security.
+- **Data Persistence**: Manages application data efficiently using a PostgreSQL database.
+- **User Authentication**: Implements secure user authentication and authorization with Spring Security.
+- **Payment Gateway Integration**: Supports payment processing for premium subscriptions or other monetized features.
+- **Quiz Generation Integration**: Interfaces with the [studai-assistant](https://github.com/kenzokomati/studai-assistant) microservice for generating AI-powered quizzes.
 
-## How It Works
+---
 
-1. **Input Video**: The backend accepts a YouTube video link via API.
-2. **Transcription**: The backend retrieves the video's transcription using the YouTube Data API.
-3. **AI Question Generation**: The transcription is processed by an AI model to generate quiz questions.
-4. **Customization**: Users can specify preferences like difficulty, question types, and the number of questions via API requests.
-5. **Persistent Storage**: Generated quizzes and user preferences are stored in a relational database.
+## Getting Started
 
-## Prerequisites
-
-- **Java 17** or later
-- **Maven** (for project build)
-- **YouTube Data API Key** (for fetching video transcripts)
-- **Gemini API Key** (for AI-powered question generation)
-- **PostgreSQL/MySQL** (or use H2 for local development)
-
-## Installation
-
-### 1. Clone the Repository
+### 1. Clone the repository:
+After forking the repository, you can clone it to your local machine using the following commands:
 
 ```bash
-git clone https://github.com/jhonatademuner/studai.git
+git clone https://github.com/your-username/studai.git
 cd studai
 ```
 
-### 2. Configure Enviroment Variables
-
-Set up the following environment variables:
+### 2. Database Setup:
+To set up the PostgreSQL database, you can use the official PostgreSQL Docker image. For example, run the following commands:
 
 ```bash
-YOUTUBE_API_KEY=<your_youtube_api_key>
-GEMINI_API_KEY=<your_gemini_api_key>
-SPRING_DATASOURCE_URL=jdbc:postgresql://localhost:5432/yourdb
-SPRING_DATASOURCE_USERNAME=your_db_username
-SPRING_DATASOURCE_PASSWORD=your_db_password
+docker run --name studai-db -e POSTGRES_USER=admin -e POSTGRES_PASSWORD=admin -p 5433:5432 -d postgres:16
+docker start studai-db
 ```
 
-### 3. Build and Run
+### 3. Build the project:
 
-To build and run the project locally:
-
+If Maven is installed on your machine, run the following command to build the project:
 ```bash
 mvn clean install
+```
+
+Alternatively, if Maven is not installed, you can use the provided Maven wrapper:
+```bash
+./mvnw clean install
+```
+
+### 4. Run the application:
+
+To run the application using Maven, execute the following command:
+```bash
 mvn spring-boot:run
 ```
 
-The application will start on ```http://localhost:8080```.
-
-## Technologies Used
-
-- **Java 17**
-- **Spring Boot**: To create RESTful services.
-- **Spring Data JPA**: For database interactions.
-- **YouTube Data API**: To fetch video transcriptions.
-- **Gemini API**: For AI-driven question generation.
-- **PostgreSQL/MySQL**: As the primary database (H2 for local development).
-- **Spring Security**: (Optional) For authentication and authorization.
-
-## API Documentation
-
-Use Swagger to document and test APIs. After running the project, access the API documentation at:
-
+If you are using the Maven wrapper, run:
 ```bash
-http://localhost:8080/swagger-ui.html
+./mvnw spring-boot:run
 ```
 
-## Future Enhancements (Optional Features)
-- **Quiz Exporting**: Allow exporting quizzes to formats like PDF, CSV, or Google Forms.
-- **User Accounts and Progress Tracking**: Add user authentication for saving quizzes and tracking progress.
-- **Leaderboard and Gamification**: Add scoring mechanisms and leaderboards to encourage quiz completion.
-- **Multilingual Support**: Expand AI capabilities to generate questions in different languages based on the video language.
+### 5. Access the API:
+The API will be available at ```http://localhost:8080```. You can use tools like Postman or curl to test the available endpoints.
+
+---
 
 ## Contributing
 
-1. Fork the project.
-2. Create your feature branch (git checkout -b feature/my-new-feature).
-3. Commit your changes (git commit -m 'Add some feature').
-4. Push to the branch (git push origin feature/my-new-feature).
-5. Submit a pull request.
+We follow the GitFlow branching model for managing feature development. Please follow the steps below to contribute to the project:
+
+### 1. Fork the Repository  
+Start by forking the repository to your own GitHub account.
+
+
+### 2. Clone the Forked Repository
+Clone your forked repository to your local machine:
+
+```bash
+git clone https://github.com/your-username/studai.git
+cd studai
+```
+
+
+### 3. Set Upstream Remote
+Add the original repository as an upstream remote to keep your fork updated:
+
+```bash
+git remote add upstream https://github.com/jhonatademuner/studai.git
+```
+
+
+### 4. Sync Your Fork
+Before starting any work, ensure your fork is up to date with the latest changes:
+
+```bash
+git fetch upstream
+git checkout main
+git merge upstream/main
+```
+
+
+### 5. Create a New Feature Branch
+Create a new feature branch from develop (or main if no develop branch exists). Name the branch according to the feature you are working on:
+
+```bash
+git checkout -b feature/my-new-feature
+```
+
+
+### 6. Implement Your Feature
+Work on your feature, implementing the necessary changes and additions.
+
+
+### 7. Commit Your Changes
+Commit your changes with a clear and concise message that follows the convention:
+
+```bash
+git commit -m 'feat: my-new-feature'
+```
+
+
+### 8. Push to Your Fork
+Push your changes to the feature branch on your fork:
+
+```bash
+git push origin feature/my-new-feature
+```
+
+
+### 9. Submit a Pull Request
+Once your feature is complete, open a pull request from your feature branch to the develop branch of the original repository. Provide a description of what the feature does and any relevant context.
+
+
+### 10. Review and Merge
+Once your pull request is reviewed and approved, it will be merged into the develop branch.
+
+---
 
 ## License
 
