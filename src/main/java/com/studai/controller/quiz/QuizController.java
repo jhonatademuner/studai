@@ -1,17 +1,14 @@
-package com.studai.controllers.quiz;
+package com.studai.controller.quiz;
 
 import com.studai.domain.quiz.dto.QuizDTO;
-import com.studai.services.quiz.QuizService;
+import com.studai.service.quiz.QuizService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 @RestController
 @RequestMapping("/api/quiz")
-public class QuizRestController {
+public class QuizController {
 
     @Autowired
     private QuizService quizService;

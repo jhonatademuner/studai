@@ -1,4 +1,4 @@
-package com.studai.services.quiz;
+package com.studai.service.quiz;
 
 import com.studai.client.assistant.AssistantClient;
 import com.studai.domain.quiz.dto.QuizDTO;
