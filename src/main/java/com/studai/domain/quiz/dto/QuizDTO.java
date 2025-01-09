@@ -14,6 +14,7 @@ import java.util.List;
 @JsonIgnoreProperties(ignoreUnknown = true)
 public class QuizDTO {
 
+    private String id;
     private String title;
     private String description;
     private List<QuestionDTO> questions;
