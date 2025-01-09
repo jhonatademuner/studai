@@ -1,5 +1,6 @@
 package com.studai.domain.question.dto;
 
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.studai.domain.question.QuestionType;
 import lombok.*;
 
@@ -10,13 +11,16 @@ import java.util.List;
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
+@JsonIgnoreProperties(ignoreUnknown = true)
 public class QuestionDTO {
 
+    private String id;
     private QuestionType questionType;
     private String statement;
     private String hint;
     private String explanation;
     private Object correctAnswer;
+    private String quizId;
     private List<String> options;
 
     public boolean isCorrectAnswer(Object answer) {
