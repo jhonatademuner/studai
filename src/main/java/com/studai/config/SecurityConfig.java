@@ -33,7 +33,7 @@ public class SecurityConfig {
 
         return http.csrf(AbstractHttpConfigurer::disable)
             .authorizeHttpRequests(request -> request
-                .requestMatchers("api/user/register", "api/user/login")
+                .requestMatchers("api/user/register", "api/user/login", "swagger-ui")
                 .permitAll()
                 .anyRequest().authenticated())
             .httpBasic(Customizer.withDefaults())

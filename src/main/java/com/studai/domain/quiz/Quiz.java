@@ -25,7 +25,15 @@ public class Quiz {
     @Column(nullable = false)
     private String description;
 
+    @Column(nullable = false)
+    @Enumerated(EnumType.STRING)
+    private QuizSourceType sourceType;
+
+    @Column(nullable = false)
+    private String sourceUri;
+
     @OneToMany(fetch = FetchType.EAGER, cascade = CascadeType.ALL, orphanRemoval = true)
     @JoinColumn(name = "quiz_id")
     private List<Question> questions;
+
 }

@@ -3,6 +3,7 @@ package com.studai.service.quiz;
 import com.studai.client.assistant.AssistantClient;
 import com.studai.domain.question.Question;
 import com.studai.domain.quiz.Quiz;
+import com.studai.domain.quiz.QuizSourceType;
 import com.studai.domain.quiz.dto.QuizDTO;
 import com.studai.repository.question.QuestionRepository;
 import com.studai.repository.quiz.QuizRepository;
@@ -37,7 +38,10 @@ public class QuizService {
 
     public QuizDTO create(String videoId, int questionsNumber, String language){
         QuizDTO quizDTO = generateQuiz(videoId, questionsNumber, language);
-        Quiz entity = quizRepository.save(QuizAssembler.toEntity(quizDTO));
+        Quiz entity = QuizAssembler.toEntity(quizDTO);
+        entity.setSourceType(QuizSourceType.YOUTUBE_VIDEO);
+        entity.setSourceUri(videoId);
+        quizRepository.save(entity);
         return QuizAssembler.toDTO(entity);
     }
 
