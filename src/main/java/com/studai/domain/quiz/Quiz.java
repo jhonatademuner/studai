@@ -1,5 +1,7 @@
 package com.studai.domain.quiz;
 
+import com.studai.domain.quiz.attempt.QuizAttempt;
+import com.studai.domain.user.User;
 import jakarta.persistence.*;
 import lombok.*;
 import com.studai.domain.question.Question;
@@ -32,8 +34,16 @@ public class Quiz {
     @Column(nullable = false)
     private String sourceUri;
 
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "user_id", nullable = false)
+    private User user;
+
     @OneToMany(fetch = FetchType.EAGER, cascade = CascadeType.ALL, orphanRemoval = true)
     @JoinColumn(name = "quiz_id")
     private List<Question> questions;
+
+    @OneToMany(fetch = FetchType.EAGER, cascade = CascadeType.ALL, orphanRemoval = true)
+    @JoinColumn(name = "quiz_id")
+    private List<QuizAttempt> attempts;
 
 }

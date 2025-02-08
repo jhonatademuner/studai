@@ -1,9 +1,11 @@
 package com.studai.domain.user;
 
+import com.studai.domain.quiz.Quiz;
 import jakarta.persistence.*;
 import lombok.*;
 
 import java.time.LocalDateTime;
+import java.util.List;
 import java.util.UUID;
 
 @Getter
@@ -37,6 +39,9 @@ public class User {
 
     @Column(nullable = false)
     private LocalDateTime updatedAt;
+
+    @OneToMany(mappedBy = "user")
+    private List<Quiz> quizzes;
 
     @PrePersist
     protected void onCreate() {

@@ -1,10 +1,14 @@
 package com.studai.controller.quiz;
 
+import com.studai.domain.quiz.attempt.dto.QuizAttemptDTO;
 import com.studai.domain.quiz.dto.QuizDTO;
 import com.studai.service.quiz.QuizService;
+import com.studai.service.user.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+
+import java.util.List;
 
 @RestController
 @RequestMapping("/api/quiz")
@@ -12,6 +16,9 @@ public class QuizController {
 
     @Autowired
     private QuizService quizService;
+
+    @Autowired
+    private UserService userService;
 
     @PostMapping("")
     public ResponseEntity<QuizDTO> create(@RequestParam String videoId,
@@ -25,6 +32,12 @@ public class QuizController {
     public ResponseEntity<QuizDTO> findById(@PathVariable String id){
         QuizDTO quiz = quizService.findById(id);
         return ResponseEntity.ok(quiz);
+    }
+
+    @GetMapping("")
+    public ResponseEntity<List<QuizDTO>> findAll(){
+        List<QuizDTO> quizzes = quizService.findAll();
+        return ResponseEntity.ok(quizzes);
     }
 
     @PutMapping("")
@@ -45,6 +58,12 @@ public class QuizController {
                                                 @RequestParam String language) {
         QuizDTO quiz = quizService.generateQuiz(videoId, questionsNumber, language);
         return ResponseEntity.ok(quiz);
+    }
+
+    @PostMapping("/attempt")
+    public ResponseEntity<QuizAttemptDTO> saveAttempt(@RequestBody QuizAttemptDTO body) {
+        QuizAttemptDTO attempt = quizService.submitAttempt(body.getQuizId(), body.getScore(), body.getTimeSpent());
+        return ResponseEntity.ok(attempt);
     }
 
 }

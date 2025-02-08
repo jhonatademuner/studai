@@ -3,6 +3,7 @@ package com.studai.domain.quiz.dto;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.studai.domain.question.dto.QuestionDTO;
 import com.studai.domain.quiz.QuizSourceType;
+import com.studai.domain.quiz.attempt.dto.QuizAttemptDTO;
 import jakarta.persistence.Column;
 import lombok.*;
 
@@ -22,5 +23,7 @@ public class QuizDTO {
     private List<QuestionDTO> questions;
     private QuizSourceType sourceType;
     private String sourceUri;
+    private String userId;
+    private List<QuizAttemptDTO> attempts;
 
 }
