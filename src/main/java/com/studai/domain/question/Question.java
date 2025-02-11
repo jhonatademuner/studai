@@ -38,7 +38,7 @@ public class Question {
     @Column(nullable = false)
     private String correctAnswer;
 
-    @ManyToOne(fetch = FetchType.LAZY)
+    @ManyToOne(fetch = FetchType.LAZY, cascade = CascadeType.REMOVE)
     @JoinColumn(name = "quiz_id", nullable = false)
     private Quiz quiz;
 

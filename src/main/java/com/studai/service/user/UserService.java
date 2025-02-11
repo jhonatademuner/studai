@@ -9,6 +9,7 @@ import com.studai.repository.user.UserRepository;
 import com.studai.service.jwt.JWTService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.authentication.AuthenticationManager;
+import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
@@ -46,29 +47,14 @@ public class UserService {
         return userRepository.save(entity);
     }
 
-    public User login(UserLoginDTO userDTO){
-        userDTO.setPassword(passwordEncoder.encode(userDTO.getPassword()));
-
-        User entity = User.builder()
-            .username(userDTO.getUsername())
-            .password(userDTO.getPassword())
-            .email(userDTO.getEmail())
-            .role(UserRole.STUDENT)
-            .createdAt(LocalDateTime.now())
-            .updatedAt(LocalDateTime.now())
-            .build();
-
-        return userRepository.save(entity);
-    }
-
-    public String verify(UserLoginDTO user){
+    public String verify(UserLoginDTO user) throws BadCredentialsException {
         Authentication authentication = authenticationManager.authenticate(new UsernamePasswordAuthenticationToken(user.getUsername(), user.getPassword()));
 
         if(authentication.isAuthenticated()){
             return jwtService.generateToken(user.getUsername());
         }
 
-        return "Fail";
+        throw new BadCredentialsException("Bad credentials");
     }
 
     public User getCurrentUser(){
@@ -77,4 +63,28 @@ public class UserService {
         return userRepository.findByUsername(userDetails.getUsername());
     }
 
+    public void updatePassword(UserLoginDTO userLoginDTO, String password) throws BadCredentialsException {
+        this.verify(userLoginDTO);
+        User existingUser = this.getCurrentUser();
+        existingUser.setPassword(passwordEncoder.encode(password));
+        userRepository.save(existingUser);
+    }
+
+    public void updateUsername(UserLoginDTO userLoginDTO, String username) throws BadCredentialsException {
+        this.verify(userLoginDTO);
+        User existingUser = this.getCurrentUser();
+        existingUser.setUsername(username);
+        userRepository.save(existingUser);
+    }
+
+    public void updateEmail(UserLoginDTO userLoginDTO, String email) throws BadCredentialsException {
+        this.verify(userLoginDTO);
+        User existingUser = this.getCurrentUser();
+        existingUser.setEmail(email);
+        userRepository.save(existingUser);
+    }
+
+    public void deleteUser() {
+        userRepository.delete(this.getCurrentUser());
+    }
 }
