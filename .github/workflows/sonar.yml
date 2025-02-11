@@ -1,0 +1,33 @@
+# .github/workflows/sonar.yml
+name: SonarQube Analysis
+
+on:
+  push:
+    branches:
+      - main
+  pull_request:
+
+jobs:
+  analyze:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Set up JDK
+        uses: actions/setup-java@v4
+        with:
+          java-version: '21'
+          distribution: 'temurin'
+      - name: SonarQube Cloud Scan
+        uses: SonarSource/sonarcloud-github-action@master
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
+        with:
+          projectBaseDir: .
+        args: >
+          -Dsonar.organization=jhonata-demuner-org
+          -Dsonar.projectKey=jhonatademuner_roman-converter
+          -Dsonar.python.coverage.reportPaths=coverage.xml
+          -Dsonar.sources=.
+          -Dsonar.tests=.
+          -Dsonar.test.inclusions=**/*Tests.java
