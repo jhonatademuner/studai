@@ -8,6 +8,9 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.HashMap;
+import java.util.Map;
+
 @RestController
 @RequestMapping("/api/user")
 public class UserController {
@@ -52,6 +55,15 @@ public class UserController {
     @GetMapping("/authenticate")
     public ResponseEntity<Void> authenticate(){
         return ResponseEntity.ok().build();
+    }
+
+    @PostMapping("/logout")
+    public ResponseEntity<Map<String, String>> logout() {
+        Map<String, String> response = new HashMap<>();
+        response.put("message", "Logout in a stateless API requires client-side token removal.");
+        response.put("action", "delete_token");
+
+        return ResponseEntity.ok(response);
     }
 
 }
