@@ -38,12 +38,14 @@ public class QuestionAssembler {
     }
 
     public static List<Question> toEntityList(List<QuestionDTO> dtoList, Quiz quiz) {
+        if(dtoList == null) return null;
         return dtoList.stream()
             .map(dto -> toEntity(dto, quiz))
             .collect(Collectors.toList());
     }
 
     public static List<QuestionDTO> toDTOList(List<Question> questions) {
+        if(questions == null) return null;
         return questions.stream()
             .map(QuestionAssembler::toDTO)
             .collect(Collectors.toList());
