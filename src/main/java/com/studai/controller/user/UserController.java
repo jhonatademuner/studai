@@ -49,4 +49,9 @@ public class UserController {
         return ResponseEntity.ok().build();
     }
 
+    @GetMapping("/authenticate")
+    public ResponseEntity<Void> authenticate(){
+        return ResponseEntity.ok().build();
+    }
+
 }
