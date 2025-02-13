@@ -5,6 +5,8 @@ import com.studai.domain.user.User;
 import jakarta.persistence.*;
 import lombok.*;
 import com.studai.domain.question.Question;
+
+import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
 
@@ -44,6 +46,6 @@ public class Quiz {
 
     @OneToMany(fetch = FetchType.EAGER, cascade = CascadeType.ALL, orphanRemoval = true)
     @JoinColumn(name = "quiz_id")
-    private List<QuizAttempt> attempts;
+    private List<QuizAttempt> attempts = new ArrayList<>();
 
 }

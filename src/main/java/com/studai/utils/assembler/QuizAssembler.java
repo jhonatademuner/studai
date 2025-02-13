@@ -28,6 +28,7 @@ public class QuizAssembler {
         quiz.setQuestions(questions);
 
         List<QuizAttempt> attempts = QuizAttemptAssembler.toEntityList(dto.getAttempts(), quiz, user);
+        quiz.setAttempts(attempts);
 
         return quiz;
     }

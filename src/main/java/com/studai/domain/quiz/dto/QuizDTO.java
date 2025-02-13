@@ -7,6 +7,7 @@ import com.studai.domain.quiz.attempt.dto.QuizAttemptDTO;
 import jakarta.persistence.Column;
 import lombok.*;
 
+import java.util.ArrayList;
 import java.util.List;
 
 @Getter
@@ -24,6 +25,6 @@ public class QuizDTO {
     private QuizSourceType sourceType;
     private String sourceUri;
     private String userId;
-    private List<QuizAttemptDTO> attempts;
+    private List<QuizAttemptDTO> attempts = new ArrayList<>();
 
 }

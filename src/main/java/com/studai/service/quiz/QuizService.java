@@ -59,14 +59,15 @@ public class QuizService {
         return QuizAssembler.toDTO(entity);
     }
 
-    public QuizDTO findById(String id){
-        Quiz quiz = quizRepository.findById(UUID.fromString(id)).orElseThrow(ResourceNotFoundException::new);
+    public QuizDTO findById(String id) {
+        Quiz quiz = quizRepository.findById(UUID.fromString(id))
+                .orElseThrow(() -> new ResourceNotFoundException("Quiz not found with ID: " + id));
         return QuizAssembler.toDTO(quiz);
     }
 
+
     public List<QuizDTO> findAll() {
         List<Quiz> quizzes = quizRepository.findByUser(userService.getCurrentUser());
-        if(quizzes.isEmpty()) throw new ResourceNotFoundException();
         List<QuizDTO> quizDtos = new ArrayList<>();
         for(Quiz quiz : quizzes){
             quizDtos.add(QuizAssembler.toDTO(quiz));
@@ -76,7 +77,7 @@ public class QuizService {
 
     public QuizDTO update(QuizDTO quizDTO) {
         Quiz quiz = quizRepository.findById(UUID.fromString(quizDTO.getId()))
-            .orElseThrow(ResourceNotFoundException::new);
+            .orElseThrow(() -> new ResourceNotFoundException("Quiz not found with ID: " + quizDTO.getId()));
 
         quiz.setTitle(quizDTO.getTitle());
         quiz.setDescription(quizDTO.getDescription());
@@ -112,14 +113,14 @@ public class QuizService {
 
 
     public QuizDTO delete(String id) {
-        Quiz quiz = quizRepository.findById(UUID.fromString(id)).orElseThrow(ResourceNotFoundException::new);
+        Quiz quiz = quizRepository.findById(UUID.fromString(id)).orElseThrow(() -> new ResourceNotFoundException("Quiz not found with ID: " + id));
         quizRepository.delete(quiz);
         return QuizAssembler.toDTO(quiz);
     }
 
     public QuizAttemptDTO submitAttempt(String quizId, Double score, Long timeSpent){
         QuizAttempt attempt = QuizAttempt.builder()
-            .quiz(quizRepository.findById(UUID.fromString(quizId)).orElseThrow(ResourceNotFoundException::new))
+            .quiz(quizRepository.findById(UUID.fromString(quizId)).orElseThrow(() -> new ResourceNotFoundException("Quiz not found with ID: " + quizId)))
             .user(userService.getCurrentUser())
             .score(score)
             .timeSpent(timeSpent)
