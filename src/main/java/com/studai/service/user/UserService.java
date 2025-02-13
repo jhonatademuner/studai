@@ -62,11 +62,14 @@ public class UserService {
         StudaiUserDetails userDetails = (StudaiUserDetails) authentication.getPrincipal();
         return userRepository.findByUsername(userDetails.getUsername());
     }
-
-    public void updatePassword(UserLoginDTO userLoginDTO, String password) throws BadCredentialsException {
-        this.verify(userLoginDTO);
+    public void updatePassword(String userPassword, String newPassword) throws BadCredentialsException {
         User existingUser = this.getCurrentUser();
-        existingUser.setPassword(passwordEncoder.encode(password));
+
+        Authentication authentication = authenticationManager.authenticate(new UsernamePasswordAuthenticationToken(existingUser.getUsername(), userPassword));
+        if(!authentication.isAuthenticated()){
+            throw new BadCredentialsException("Bad credentials");
+        }
+        existingUser.setPassword(passwordEncoder.encode(newPassword));
         userRepository.save(existingUser);
     }
 

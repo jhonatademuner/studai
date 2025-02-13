@@ -1,9 +1,11 @@
 package com.studai.controller.user;
 
 import com.studai.domain.user.User;
+import com.studai.domain.user.dto.UserDTO;
 import com.studai.domain.user.dto.UserLoginDTO;
 import com.studai.domain.user.dto.UserRegisterDTO;
 import com.studai.service.user.UserService;
+import com.studai.utils.assembler.UserAssembler;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -29,8 +31,8 @@ public class UserController {
     }
 
     @PutMapping("/password")
-    public ResponseEntity<Void> updatePassword(@RequestBody UserLoginDTO user, @RequestParam String newPassword){
-        userService.updatePassword(user, newPassword);
+    public ResponseEntity<Void> updatePassword(@RequestParam String userPassword, @RequestParam String newPassword){
+        userService.updatePassword(userPassword, newPassword);
         return ResponseEntity.ok().build();
     }
 
@@ -64,6 +66,11 @@ public class UserController {
         response.put("action", "delete_token");
 
         return ResponseEntity.ok(response);
+    }
+
+    @GetMapping("")
+    public ResponseEntity<UserDTO> getCurrentUser(){
+        return ResponseEntity.ok(UserAssembler.toDTO(userService.getCurrentUser()));
     }
 
 }
