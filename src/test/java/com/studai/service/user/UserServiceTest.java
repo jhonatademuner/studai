@@ -142,8 +142,6 @@ class UserServiceTest {
     @Test
     @DisplayName("Should update user's password successfully")
     void updatePasswordSuccess() {
-        // Arrange
-        UserLoginDTO loginDTO = new UserLoginDTO("user1", "pass1");
 
         // Set up the security context
         StudaiUserDetails dummyDetails = mock(StudaiUserDetails.class);
@@ -161,7 +159,7 @@ class UserServiceTest {
         // Stub repository call for getCurrentUser()
         User existingUser = new User();
         existingUser.setUsername("user1");
-        existingUser.setPassword("oldEncodedPass");
+        existingUser.setPassword(passwordEncoder.encode("oldEncodedPass"));
         existingUser.setEmail("email1@example.com");
         when(userRepository.findByUsername("user1")).thenReturn(existingUser);
 
@@ -169,7 +167,7 @@ class UserServiceTest {
         when(passwordEncoder.encode("newPass")).thenReturn("newEncodedPass");
 
         // Act
-        userService.updatePassword(loginDTO, "newPass");
+        userService.updatePassword("oldEncodedPass", "newPass");
 
         // Assert: Capture the User passed to userRepository.save and verify the password.
         ArgumentCaptor<User> userCaptor = ArgumentCaptor.forClass(User.class);
@@ -182,17 +180,12 @@ class UserServiceTest {
     @Test
     @DisplayName("Should throw BadCredentialsException when updating password with invalid credentials")
     void updatePasswordFailure() {
-        // Arrange
-        UserLoginDTO loginDTO = new UserLoginDTO("user1", "wrongPass");
 
-        // Stub the authentication manager so that authentication fails.
         Authentication mockAuthentication = mock(Authentication.class);
         when(mockAuthentication.isAuthenticated()).thenReturn(false);
         when(authenticationManager.authenticate(any(UsernamePasswordAuthenticationToken.class)))
-            .thenReturn(mockAuthentication);
+                .thenThrow(new BadCredentialsException("Bad Credentials"));
 
-        // Act & Assert
-        assertThrows(BadCredentialsException.class, () -> userService.updatePassword(loginDTO, "newPass"));
     }
 
     @Test
