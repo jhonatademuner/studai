@@ -7,6 +7,7 @@ import com.studai.domain.user.dto.UserLoginDTO;
 import com.studai.domain.user.dto.UserRegisterDTO;
 import com.studai.repository.user.UserRepository;
 import com.studai.service.jwt.JWTService;
+import com.studai.utils.exception.UserAlreadyExistsException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.BadCredentialsException;
@@ -33,6 +34,11 @@ public class UserService {
     private final BCryptPasswordEncoder passwordEncoder = new BCryptPasswordEncoder(12);
 
     public User register(UserRegisterDTO userDTO){
+
+        if(userRepository.findByUsername(userDTO.getUsername()) != null) {
+            throw new UserAlreadyExistsException("User already exists with username: " + userDTO.getUsername());
+        }
+
         userDTO.setPassword(passwordEncoder.encode(userDTO.getPassword()));
 
         User entity = User.builder()
