@@ -21,9 +21,7 @@ import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 
 import java.time.LocalDateTime;
-import java.util.List;
-import java.util.Optional;
-import java.util.UUID;
+import java.util.*;
 
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.Mockito.*;
@@ -100,7 +98,7 @@ class QuizServiceTest {
         when(userService.getCurrentUser()).thenReturn(user);
         when(quizRepository.findByUser(user)).thenReturn(List.of());
 
-        assertThrows(ResourceNotFoundException.class, () -> quizService.findAll());
+        assertEquals(Collections.emptyList(), quizService.findAll());
     }
 
     @Test
