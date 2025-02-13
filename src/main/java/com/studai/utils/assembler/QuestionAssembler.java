@@ -3,7 +3,9 @@ package com.studai.utils.assembler;
 import com.studai.domain.question.Question;
 import com.studai.domain.question.dto.QuestionDTO;
 import com.studai.domain.quiz.Quiz;
+import com.studai.domain.quiz.attempt.QuizAttempt;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
 import java.util.stream.Collectors;
@@ -38,14 +40,14 @@ public class QuestionAssembler {
     }
 
     public static List<Question> toEntityList(List<QuestionDTO> dtoList, Quiz quiz) {
-        if(dtoList == null) return null;
+        if(dtoList == null) return new ArrayList<>();
         return dtoList.stream()
             .map(dto -> toEntity(dto, quiz))
             .collect(Collectors.toList());
     }
 
     public static List<QuestionDTO> toDTOList(List<Question> questions) {
-        if(questions == null) return null;
+        if(questions == null) return new ArrayList<>();
         return questions.stream()
             .map(QuestionAssembler::toDTO)
             .collect(Collectors.toList());
