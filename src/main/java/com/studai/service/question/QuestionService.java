@@ -22,18 +22,18 @@ public class QuestionService {
     private QuizRepository quizRepository;
 
     public QuestionDTO create(QuestionDTO dto){
-        Quiz quiz = quizRepository.findById(UUID.fromString(dto.getQuizId())).orElseThrow(ResourceNotFoundException::new);
+        Quiz quiz = quizRepository.findById(UUID.fromString(dto.getQuizId())).orElseThrow(() -> new ResourceNotFoundException("Quiz not found with ID: " + dto.getQuizId()));
         Question entity = questionRepository.save(QuestionAssembler.toEntity(dto, quiz));
         return QuestionAssembler.toDTO(entity);
     }
 
     public QuestionDTO findById(String id){
-        Question entity = questionRepository.findById(UUID.fromString(id)).orElseThrow(ResourceNotFoundException::new);
+        Question entity = questionRepository.findById(UUID.fromString(id)).orElseThrow(() -> new ResourceNotFoundException("Question not found with ID: " + id));
         return QuestionAssembler.toDTO(entity);
     }
 
     public QuestionDTO update(QuestionDTO questionDTO) {
-        Question existingQuestion = questionRepository.findById(UUID.fromString(questionDTO.getId())).orElseThrow(ResourceNotFoundException::new);
+        Question existingQuestion = questionRepository.findById(UUID.fromString(questionDTO.getId())).orElseThrow(() -> new ResourceNotFoundException("Question not found with ID: " + questionDTO.getId()));
         Question updatedQuestion = QuestionAssembler.toEntity(questionDTO, existingQuestion.getQuiz());
         updatedQuestion.setId(existingQuestion.getId());
 
@@ -41,7 +41,7 @@ public class QuestionService {
     }
 
     public QuestionDTO delete(String id) {
-        Question entity = questionRepository.findById(UUID.fromString(id)).orElseThrow(ResourceNotFoundException::new);
+        Question entity = questionRepository.findById(UUID.fromString(id)).orElseThrow(() -> new ResourceNotFoundException("Question not found with ID: " + id));
         questionRepository.delete(entity);
         return QuestionAssembler.toDTO(entity);
     }
