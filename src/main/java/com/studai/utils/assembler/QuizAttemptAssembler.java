@@ -6,6 +6,7 @@ import com.studai.domain.quiz.Quiz;
 import com.studai.domain.user.User;
 
 import java.util.ArrayList;
+import java.util.Comparator;
 import java.util.List;
 import java.util.UUID;
 import java.util.stream.Collectors;
@@ -35,17 +36,19 @@ public class QuizAttemptAssembler {
     }
 
     public static List<QuizAttempt> toEntityList(List<QuizAttemptDTO> dtoList, Quiz quiz, User user) {
-        if(dtoList == null || dtoList.isEmpty()) return new ArrayList<>();
+        if (dtoList == null || dtoList.isEmpty()) return new ArrayList<>();
         return dtoList.stream()
-            .map(dto -> toEntity(dto, quiz, user))
-            .collect(Collectors.toList());
+                .map(dto -> toEntity(dto, quiz, user))
+                .sorted(Comparator.comparing(QuizAttempt::getCompletionDate).reversed()) // Sort by most recent
+                .collect(Collectors.toList());
     }
 
-    public static List<QuizAttemptDTO> toDTOList(List<QuizAttempt> questions) {
-        if(questions == null || questions.isEmpty()) return new ArrayList<>();
-        return questions.stream()
-            .map(QuizAttemptAssembler::toDTO)
-            .collect(Collectors.toList());
+    public static List<QuizAttemptDTO> toDTOList(List<QuizAttempt> attempts) {
+        if (attempts == null || attempts.isEmpty()) return new ArrayList<>();
+        return attempts.stream()
+                .sorted(Comparator.comparing(QuizAttempt::getCompletionDate).reversed()) // Sort by most recent
+                .map(QuizAttemptAssembler::toDTO)
+                .collect(Collectors.toList());
     }
 
 }
