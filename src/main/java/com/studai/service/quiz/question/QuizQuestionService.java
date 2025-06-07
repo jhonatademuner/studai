@@ -42,11 +42,10 @@ public class QuizQuestionService {
         return questionAssembler.toDto(questionRepository.save(updatedQuestion));
     }
 
-    public QuizQuestionDTO delete(UUID id) {
+    public void delete(UUID id) {
         QuizQuestion entity = questionRepository.findById(id)
                 .orElseThrow(() -> new ResourceNotFoundException("Question not found with ID: " + id));
         questionRepository.delete(entity);
-        return questionAssembler.toDto(entity);
     }
 
 }
