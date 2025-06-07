@@ -1,18 +1,17 @@
 package com.studai.service.quiz;
 
 import com.studai.client.assistant.AssistantClient;
-import com.studai.domain.question.Question;
+import com.studai.domain.quiz.question.QuizQuestion;
 import com.studai.domain.quiz.Quiz;
 import com.studai.domain.quiz.QuizSourceType;
 import com.studai.domain.quiz.attempt.QuizAttempt;
 import com.studai.domain.quiz.attempt.dto.QuizAttemptDTO;
 import com.studai.domain.quiz.dto.QuizDTO;
-import com.studai.domain.user.User;
-import com.studai.repository.question.QuestionRepository;
+import com.studai.repository.quiz.question.QuizQuestionRepository;
 import com.studai.repository.quiz.QuizRepository;
 import com.studai.repository.quiz.attempt.QuizAttemptRepository;
 import com.studai.service.user.UserService;
-import com.studai.utils.assembler.QuestionAssembler;
+import com.studai.utils.assembler.QuizQuestionAssembler;
 import com.studai.utils.assembler.QuizAssembler;
 import com.studai.utils.assembler.QuizAttemptAssembler;
 import com.studai.utils.exception.ResourceNotFoundException;
@@ -35,7 +34,7 @@ public class QuizService {
     private QuizAttemptRepository quizAttemptRepository;
 
     @Autowired
-    private QuestionRepository questionRepository;
+    private QuizQuestionRepository questionRepository;
 
     @Autowired
     private UserService userService;
@@ -47,7 +46,7 @@ public class QuizService {
         Map<String, String> headers = Map.of("Connection", "keep-alive");
         Map<String, String> params = Map.of("videoId", videoId, "questionsNumber", String.valueOf(questionsNumber), "language", language);
 
-        return assistantClient.postRequest("/quiz", null, headers, params, QuizDTO.class);
+        return assistantClient.postRequest("/quiz", null, headers, params, QuizDTO.class).getBody();
     }
 
     public QuizDTO create(String videoId, int questionsNumber, String language){
@@ -65,9 +64,9 @@ public class QuizService {
         return QuizAssembler.toDTO(quiz);
     }
 
-
-    public List<QuizDTO> findAll() {
+    public List<QuizDTO> find(int page, int size) {
         List<Quiz> quizzes = quizRepository.findByUser(userService.getCurrentUser());
+
         List<QuizDTO> quizDtos = new ArrayList<>();
         for(Quiz quiz : quizzes){
             quizDtos.add(QuizAssembler.toDTO(quiz));
@@ -82,19 +81,19 @@ public class QuizService {
         quiz.setTitle(quizDTO.getTitle());
         quiz.setDescription(quizDTO.getDescription());
 
-        List<Question> updatedQuestions = QuestionAssembler.toEntityList(quizDTO.getQuestions(), quiz);
-        List<Question> existingQuestions = quiz.getQuestions();
+        List<QuizQuestion> updatedQuestions = QuizQuestionAssembler.toEntityList(quizDTO.getQuestions(), quiz);
+        List<QuizQuestion> existingQuestions = quiz.getQuestions();
 
         existingQuestions.removeIf(existing ->
             updatedQuestions.stream().noneMatch(updated -> updated.getId() != null && updated.getId().equals(existing.getId()))
         );
 
-        for (Question updatedQuestion : updatedQuestions) {
+        for (QuizQuestion updatedQuestion : updatedQuestions) {
             if (updatedQuestion.getId() == null ||
                 existingQuestions.stream().noneMatch(existing -> existing.getId().equals(updatedQuestion.getId()))) {
                 existingQuestions.add(updatedQuestion);
             } else {
-                Question existing = existingQuestions.stream()
+                QuizQuestion existing = existingQuestions.stream()
                     .filter(q -> q.getId().equals(updatedQuestion.getId()))
                     .findFirst()
                     .orElseThrow();

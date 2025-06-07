@@ -35,8 +35,11 @@ public class QuizController {
     }
 
     @GetMapping("")
-    public ResponseEntity<List<QuizDTO>> findAll(){
-        List<QuizDTO> quizzes = quizService.findAll();
+    public ResponseEntity<List<QuizDTO>> findAll(
+            @RequestParam (required = false, defaultValue = "1") int page,
+            @RequestParam (required = false, defaultValue = "10") int size
+    ){
+        List<QuizDTO> quizzes = quizService.find(page, size);
         return ResponseEntity.ok(quizzes);
     }
 

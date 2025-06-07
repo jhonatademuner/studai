@@ -1,7 +1,7 @@
 package com.studai.utils.assembler;
 
-import com.studai.domain.question.Question;
-import com.studai.domain.question.dto.QuestionDTO;
+import com.studai.domain.quiz.question.QuizQuestion;
+import com.studai.domain.quiz.question.dto.QuizQuestionDTO;
 import com.studai.domain.quiz.Quiz;
 import com.studai.domain.quiz.attempt.QuizAttempt;
 import com.studai.domain.quiz.attempt.dto.QuizAttemptDTO;
@@ -24,7 +24,7 @@ public class QuizAssembler {
             .user(user)
             .build();
 
-        List<Question> questions = QuestionAssembler.toEntityList(dto.getQuestions(), quiz);
+        List<QuizQuestion> questions = QuizQuestionAssembler.toEntityList(dto.getQuestions(), quiz);
         quiz.setQuestions(questions);
 
         List<QuizAttempt> attempts = QuizAttemptAssembler.toEntityList(dto.getAttempts(), quiz, user);
@@ -35,7 +35,7 @@ public class QuizAssembler {
 
     public static QuizDTO toDTO(Quiz quiz) {
 
-        List<QuestionDTO> questionDTOs = QuestionAssembler.toDTOList(quiz.getQuestions());
+        List<QuizQuestionDTO> questionDTOs = QuizQuestionAssembler.toDTOList(quiz.getQuestions());
         List<QuizAttemptDTO> attemptDTOS = QuizAttemptAssembler.toDTOList(quiz.getAttempts());
 
         return QuizDTO.builder()

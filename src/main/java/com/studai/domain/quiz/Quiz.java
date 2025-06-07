@@ -4,7 +4,7 @@ import com.studai.domain.quiz.attempt.QuizAttempt;
 import com.studai.domain.user.User;
 import jakarta.persistence.*;
 import lombok.*;
-import com.studai.domain.question.Question;
+import com.studai.domain.quiz.question.QuizQuestion;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -42,7 +42,7 @@ public class Quiz {
 
     @OneToMany(fetch = FetchType.EAGER, cascade = CascadeType.ALL, orphanRemoval = true)
     @JoinColumn(name = "quiz_id")
-    private List<Question> questions;
+    private List<QuizQuestion> questions;
 
     @OneToMany(fetch = FetchType.EAGER, cascade = CascadeType.ALL, orphanRemoval = true)
     @JoinColumn(name = "quiz_id")
