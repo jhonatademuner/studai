@@ -1,9 +1,11 @@
 package com.studai.client.assistant.config;
 
 import lombok.Getter;
+import lombok.Setter;
 import org.springframework.boot.context.properties.ConfigurationProperties;
 import org.springframework.stereotype.Component;
 
+@Setter
 @Getter
 @Component
 @ConfigurationProperties(prefix = "assistant")
@@ -12,11 +14,4 @@ public class AssistantProperties {
     private String baseUri;
     private String openaiApiKey;
 
-    public void setBaseUri(String baseUri) {
-        this.baseUri = baseUri;
-    }
-
-    public void setOpenaiApiKey(String openaiApiKey) {
-        this.openaiApiKey = openaiApiKey;
-    }
 }
