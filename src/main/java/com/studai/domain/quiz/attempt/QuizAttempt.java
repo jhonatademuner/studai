@@ -5,6 +5,7 @@ import com.studai.domain.user.User;
 import jakarta.persistence.*;
 import lombok.*;
 
+import java.math.BigDecimal;
 import java.time.LocalDateTime;
 import java.util.UUID;
 
@@ -22,20 +23,25 @@ public class QuizAttempt {
     private UUID id;
 
     @ManyToOne(fetch = FetchType.LAZY, cascade = CascadeType.REMOVE)
-    @JoinColumn(name = "quiz_id", nullable = false)
+    @JoinColumn(name = "quiz_id", nullable = false, updatable = false)
     private Quiz quiz;
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "user_id", nullable = true)
+    @JoinColumn(name = "user_id", nullable = false, updatable = false)
     private User user;
 
-    @Column(nullable = false)
-    private Double score;
+    @Column(nullable = false, updatable = false)
+    private BigDecimal score;
 
-    @Column(nullable = false)
-    private LocalDateTime completionDate;
+    @Column(nullable = false, updatable = false)
+    private LocalDateTime createdAt;
 
-    @Column
-    private Long timeSpent; // Milliseconds
+    @Column(nullable = false, updatable = false)
+    private Long timeSpent; // Seconds spent on the attempt
+
+    @PrePersist
+    protected void onCreate() {
+        createdAt = LocalDateTime.now();
+    }
 
 }

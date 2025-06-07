@@ -4,51 +4,42 @@ import com.studai.domain.quiz.attempt.QuizAttempt;
 import com.studai.domain.quiz.attempt.dto.QuizAttemptDTO;
 import com.studai.domain.quiz.Quiz;
 import com.studai.domain.user.User;
+import com.studai.repository.quiz.QuizRepository;
+import com.studai.service.user.UserService;
+import lombok.RequiredArgsConstructor;
+import org.springframework.stereotype.Component;
 
-import java.util.ArrayList;
-import java.util.Comparator;
-import java.util.List;
-import java.util.UUID;
-import java.util.stream.Collectors;
+@Component
+@RequiredArgsConstructor
+public class QuizAttemptAssembler extends AbstractAssembler<QuizAttempt, QuizAttemptDTO> {
 
-public class QuizAttemptAssembler {
+    private final QuizRepository quizRepository;
+    private final UserService userService;
 
-    public static QuizAttempt toEntity(QuizAttemptDTO dto, Quiz quiz, User user) {
-        return QuizAttempt.builder()
-            .id(dto.getId() != null ? UUID.fromString(dto.getId()) : null)
-            .quiz(quiz)
-            .user(user)
-            .score(dto.getScore())
-            .completionDate(dto.getCompletionDate())
-            .timeSpent(dto.getTimeSpent())
-            .build();
-    }
-
-    public static QuizAttemptDTO toDTO(QuizAttempt quizAttempt) {
+    public QuizAttemptDTO toDto(QuizAttempt quizAttempt) {
         return QuizAttemptDTO.builder()
-            .id(quizAttempt.getId() != null ? quizAttempt.getId().toString() : null)
-            .quizId(quizAttempt.getQuiz() != null ? quizAttempt.getQuiz().getId().toString() : null)
-            .userId(quizAttempt.getUser() != null ? quizAttempt.getUser().getId().toString() : null)
+            .id(quizAttempt.getId() != null ? quizAttempt.getId() : null)
+            .quizId(quizAttempt.getQuiz() != null ? quizAttempt.getQuiz().getId() : null)
             .score(quizAttempt.getScore())
-            .completionDate(quizAttempt.getCompletionDate())
+            .createdAt(quizAttempt.getCreatedAt())
             .timeSpent(quizAttempt.getTimeSpent())
             .build();
     }
 
-    public static List<QuizAttempt> toEntityList(List<QuizAttemptDTO> dtoList, Quiz quiz, User user) {
-        if (dtoList == null || dtoList.isEmpty()) return new ArrayList<>();
-        return dtoList.stream()
-                .map(dto -> toEntity(dto, quiz, user))
-                .sorted(Comparator.comparing(QuizAttempt::getCompletionDate).reversed()) // Sort by most recent
-                .collect(Collectors.toList());
-    }
+    public QuizAttempt toEntity(QuizAttemptDTO dto) {
+        Quiz quiz = quizRepository.findById(dto.getQuizId())
+                .orElseThrow(() -> new IllegalArgumentException("Quiz not found: " + dto.getQuizId()));
 
-    public static List<QuizAttemptDTO> toDTOList(List<QuizAttempt> attempts) {
-        if (attempts == null || attempts.isEmpty()) return new ArrayList<>();
-        return attempts.stream()
-                .sorted(Comparator.comparing(QuizAttempt::getCompletionDate).reversed()) // Sort by most recent
-                .map(QuizAttemptAssembler::toDTO)
-                .collect(Collectors.toList());
+        User user = userService.getCurrentUser();
+
+        return QuizAttempt.builder()
+                .id(dto.getId() != null ? dto.getId() : null)
+                .quiz(quiz)
+                .user(user)
+                .score(dto.getScore())
+                .createdAt(dto.getCreatedAt())
+                .timeSpent(dto.getTimeSpent())
+                .build();
     }
 
 }

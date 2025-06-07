@@ -3,7 +3,9 @@ package com.studai.domain.quiz.attempt.dto;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import lombok.*;
 
+import java.math.BigDecimal;
 import java.time.LocalDateTime;
+import java.util.UUID;
 
 @Getter
 @Setter
@@ -13,11 +15,10 @@ import java.time.LocalDateTime;
 @JsonIgnoreProperties(ignoreUnknown = true)
 public class QuizAttemptDTO {
 
-    private String id;
-    private String quizId;
-    private String userId;
-    private Double score;
-    private LocalDateTime completionDate;
+    private UUID id;
+    private UUID quizId;
+    private BigDecimal score;
     private Long timeSpent;
+    private LocalDateTime createdAt;
 
 }
