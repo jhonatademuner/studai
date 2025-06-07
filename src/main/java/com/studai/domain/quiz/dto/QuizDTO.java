@@ -8,6 +8,7 @@ import lombok.*;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.UUID;
 
 @Getter
 @Setter
@@ -17,7 +18,7 @@ import java.util.List;
 @JsonIgnoreProperties(ignoreUnknown = true)
 public class QuizDTO {
 
-    private String id;
+    private UUID id;
     private String title;
     private String description;
     private List<QuizQuestionDTO> questions;

@@ -6,6 +6,7 @@ import jakarta.persistence.*;
 import lombok.*;
 import com.studai.domain.quiz.question.QuizQuestion;
 
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
@@ -40,6 +41,12 @@ public class Quiz {
     @JoinColumn(name = "user_id", nullable = true)
     private User user;
 
+    @Column(nullable = false, updatable = false)
+    private LocalDateTime createdAt;
+
+    @Column(nullable = false)
+    private LocalDateTime updatedAt;
+
     @OneToMany(fetch = FetchType.EAGER, cascade = CascadeType.ALL, orphanRemoval = true)
     @JoinColumn(name = "quiz_id")
     private List<QuizQuestion> questions;
@@ -48,4 +55,14 @@ public class Quiz {
     @JoinColumn(name = "quiz_id")
     private List<QuizAttempt> attempts = new ArrayList<>();
 
+    @PrePersist
+    protected void onCreate() {
+        createdAt = LocalDateTime.now();
+        updatedAt = LocalDateTime.now();
+    }
+
+    @PreUpdate
+    protected void onUpdate() {
+        updatedAt = LocalDateTime.now();
+    }
 }
