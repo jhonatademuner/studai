@@ -2,7 +2,7 @@ package com.studai.service.user;
 
 import com.studai.domain.user.StudaiUserDetails;
 import com.studai.domain.user.User;
-import com.studai.domain.user.dto.UpdateUserDTO;
+import com.studai.domain.user.dto.UserCredentialsDTO;
 import com.studai.domain.user.dto.UserDTO;
 import com.studai.domain.user.dto.UserLoginDTO;
 import com.studai.domain.user.dto.UserRegisterDTO;
@@ -59,14 +59,14 @@ public class UserService {
 
     public String verify(UserLoginDTO loginDTO) throws BadCredentialsException {
 
-        User user = userRepository.findByUsername(loginDTO.getLogin());
-        if(user == null) user = userRepository.findByEmail(loginDTO.getLogin());
+        User user = userRepository.findByUsernameAndActiveTrue(loginDTO.getLogin());
 
         if(user == null) {
-            throw new BadCredentialsException("Bad credentials");
+            user = userRepository.findByEmailAndActiveTrue(loginDTO.getLogin());
+            if(user == null)throw new BadCredentialsException("Bad credentials");
         }
 
-        Authentication authentication = authenticationManager.authenticate(new UsernamePasswordAuthenticationToken(user.getUsername(), user.getPassword()));
+        Authentication authentication = authenticationManager.authenticate(new UsernamePasswordAuthenticationToken(user.getUsername(), loginDTO.getPassword()));
 
         if(authentication.isAuthenticated()){
             return jwtService.generateToken(user.getUsername());
@@ -78,32 +78,32 @@ public class UserService {
     public User getCurrentUser(){
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
         StudaiUserDetails userDetails = (StudaiUserDetails) authentication.getPrincipal();
-        return userRepository.findByUsername(userDetails.getUsername());
+        return userRepository.findByUsernameAndActiveTrue(userDetails.getUsername());
     }
 
-    public void updateCredentials(UpdateUserDTO updateUserDTO) throws BadCredentialsException {
+    public void updateCredentials(UserCredentialsDTO userCredentialsDTO) throws BadCredentialsException {
         User existingUser = this.getCurrentUser();
-        Authentication authentication = authenticationManager.authenticate(new UsernamePasswordAuthenticationToken(existingUser.getUsername(), updateUserDTO.getOldPassword()));
+        Authentication authentication = authenticationManager.authenticate(new UsernamePasswordAuthenticationToken(existingUser.getUsername(), userCredentialsDTO.getOldPassword()));
         if(!authentication.isAuthenticated()){
             throw new BadCredentialsException("Bad credentials");
         }
 
-        if (StringUtils.isNotBlank(updateUserDTO.getUsername())){
-            if(userRepository.findByUsername(updateUserDTO.getUsername()) != null) {
-                throw new UserAlreadyExistsException("User already exists with username: " + updateUserDTO.getUsername());
+        if (StringUtils.isNotBlank(userCredentialsDTO.getUsername())){
+            if(userRepository.findByUsernameAndActiveTrue(userCredentialsDTO.getUsername()) != null) {
+                throw new UserAlreadyExistsException("User already exists with username: " + userCredentialsDTO.getUsername());
             }
-            existingUser.setUsername(updateUserDTO.getUsername());
+            existingUser.setUsername(userCredentialsDTO.getUsername());
         }
 
-        if (StringUtils.isNotBlank(updateUserDTO.getEmail())){
-            if(userRepository.findByEmail(updateUserDTO.getEmail()) != null) {
-                throw new UserAlreadyExistsException("User already exists with email: " + updateUserDTO.getEmail());
+        if (StringUtils.isNotBlank(userCredentialsDTO.getEmail())){
+            if(userRepository.findByEmailAndActiveTrue(userCredentialsDTO.getEmail()) != null) {
+                throw new UserAlreadyExistsException("User already exists with email: " + userCredentialsDTO.getEmail());
             }
-            existingUser.setEmail(updateUserDTO.getEmail());
+            existingUser.setEmail(userCredentialsDTO.getEmail());
         }
 
-        if (StringUtils.isNotBlank(updateUserDTO.getNewPassword())){
-            existingUser.setPassword(passwordEncoder.encode(updateUserDTO.getNewPassword()));
+        if (StringUtils.isNotBlank(userCredentialsDTO.getNewPassword())){
+            existingUser.setPassword(passwordEncoder.encode(userCredentialsDTO.getNewPassword()));
         }
 
         userRepository.save(existingUser);

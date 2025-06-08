@@ -3,9 +3,14 @@ spring:
     name: studai
 
   datasource:
+    driver-class-name: org.postgresql.Driver
     url: jdbc:postgresql://localhost:5432/devdb
     username: devuser
     password: devpassword
+
+  jpa:
+    database-platform: org.hibernate.dialect.PostgreSQLDialect
+    database: postgresql
 
   flyway:
     sql-migration-prefix: 20

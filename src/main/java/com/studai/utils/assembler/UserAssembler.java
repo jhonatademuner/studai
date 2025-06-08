@@ -18,6 +18,7 @@ public class UserAssembler extends AbstractAssembler<User, UserDTO> {
                 .email(dto.getEmail())
                 .password(dto.getPassword())
                 .role(dto.getRole())
+                .active(dto.isActive())
                 .createdAt(dto.getCreatedAt())
                 .updatedAt(dto.getUpdatedAt())
                 .build();
@@ -31,6 +32,7 @@ public class UserAssembler extends AbstractAssembler<User, UserDTO> {
                 .email(user.getEmail())
                 .password(user.getPassword())
                 .role(user.getRole())
+                .active(user.isActive())
                 .createdAt(user.getCreatedAt())
                 .updatedAt(user.getUpdatedAt())
                 .build();
@@ -42,6 +44,7 @@ public class UserAssembler extends AbstractAssembler<User, UserDTO> {
                 .email(dto.getEmail())
                 .password(dto.getPassword())
                 .role(dto.getRole())
+                .active(true) // Default to active on registration
                 .build();
     }
 

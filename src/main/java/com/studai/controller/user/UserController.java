@@ -1,9 +1,6 @@
 package com.studai.controller.user;
 
-import com.studai.domain.user.dto.UpdateUserDTO;
-import com.studai.domain.user.dto.UserDTO;
-import com.studai.domain.user.dto.UserLoginDTO;
-import com.studai.domain.user.dto.UserRegisterDTO;
+import com.studai.domain.user.dto.*;
 import com.studai.service.user.UserService;
 import com.studai.utils.assembler.UserAssembler;
 import org.springframework.http.HttpStatus;
@@ -25,34 +22,34 @@ public class UserController {
         this.userAssembler = userAssembler;
     }
 
-    @PostMapping("/v1/user/register")
+    @PostMapping("/v1/register")
     public ResponseEntity<UserDTO> register(@RequestBody UserRegisterDTO user){
         return ResponseEntity.status(HttpStatus.OK).body(userService.register(user));
     }
 
-    @PostMapping("/v1/user/login")
+    @PostMapping("/v1/login")
     public String login(@RequestBody UserLoginDTO user){
         return userService.verify(user);
     }
 
-    @PutMapping("/v1/user/password")
-    public ResponseEntity<Void> updatePassword(@RequestBody UpdateUserDTO updateUserDTO){
-        userService.updateCredentials(updateUserDTO);
+    @PutMapping("/v1/me/credentials")
+    public ResponseEntity<Void> updateCredentials(@RequestBody UserCredentialsDTO userCredentialsDTO){
+        userService.updateCredentials(userCredentialsDTO);
         return ResponseEntity.status(HttpStatus.OK).build();
     }
 
-    @DeleteMapping("/v1/user")
-    public ResponseEntity<Void> deleteUser(@RequestParam(required = false) String password) {
-        userService.deleteUser(password);
+    @DeleteMapping("/v1/me")
+    public ResponseEntity<Void> deleteUser(@RequestBody UserDeleteDTO userDeleteDTO) {
+        userService.deleteUser(userDeleteDTO.getPassword());
         return ResponseEntity.status(HttpStatus.OK).build();
     }
 
-    @GetMapping("/v1/user/authenticate")
+    @GetMapping("/v1/me/auth")
     public ResponseEntity<Void> authenticate(){
         return ResponseEntity.status(HttpStatus.OK).build();
     }
 
-    @PostMapping("/v1/user/logout")
+    @PostMapping("/v1/logout")
     public ResponseEntity<Map<String, String>> logout() {
         Map<String, String> response = new HashMap<>();
         response.put("message", "Logout in a stateless API requires client-side token removal.");
@@ -61,7 +58,7 @@ public class UserController {
         return ResponseEntity.status(HttpStatus.OK).body(response);
     }
 
-    @GetMapping("/v1/user")
+    @GetMapping("/v1/me")
     public ResponseEntity<UserDTO> getCurrentUser(){
         return ResponseEntity.status(HttpStatus.OK).body(userAssembler.toDto(userService.getCurrentUser()));
     }

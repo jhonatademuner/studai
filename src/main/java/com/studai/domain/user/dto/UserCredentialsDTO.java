@@ -9,7 +9,7 @@ import lombok.*;
 @AllArgsConstructor
 @Builder
 @JsonIgnoreProperties(ignoreUnknown = true)
-public class UpdateUserDTO {
+public class UserCredentialsDTO {
 
 	private String username;
 	private String email;
