@@ -22,7 +22,7 @@ public class QuizAttempt {
     @GeneratedValue(strategy = GenerationType.AUTO)
     private UUID id;
 
-    @ManyToOne(fetch = FetchType.LAZY, cascade = CascadeType.REMOVE)
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "quiz_id", nullable = false, updatable = false)
     private Quiz quiz;
 
@@ -34,10 +34,10 @@ public class QuizAttempt {
     private BigDecimal score;
 
     @Column(nullable = false, updatable = false)
-    private LocalDateTime createdAt;
+    private Long timeSpent; // Seconds spent on the attempt
 
     @Column(nullable = false, updatable = false)
-    private Long timeSpent; // Seconds spent on the attempt
+    private LocalDateTime createdAt;
 
     @PrePersist
     protected void onCreate() {

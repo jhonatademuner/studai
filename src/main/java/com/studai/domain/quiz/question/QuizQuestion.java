@@ -15,7 +15,7 @@ import java.util.UUID;
 @AllArgsConstructor
 @Builder
 @Entity
-@Table(name = "tquestion")
+@Table(name = "tquiz_question")
 public class QuizQuestion {
 
 	@Id
@@ -38,8 +38,8 @@ public class QuizQuestion {
 	@Column(nullable = false)
 	private String correctAnswer;
 
-	@ManyToOne(fetch = FetchType.LAZY, cascade = CascadeType.REMOVE)
-	@JoinColumn(name = "quiz_id", nullable = false)
+	@ManyToOne(fetch = FetchType.LAZY)
+	@JoinColumn(name = "quiz_id", nullable = false, updatable = false)
 	private Quiz quiz;
 
 	@Column(nullable = false)

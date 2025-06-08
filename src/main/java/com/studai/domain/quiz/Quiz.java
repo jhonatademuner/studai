@@ -38,7 +38,7 @@ public class Quiz {
     private String sourceUri;
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "user_id", nullable = true)
+    @JoinColumn(name = "user_id", nullable = false)
     private User user;
 
     @Column(nullable = false, updatable = false)
@@ -47,11 +47,11 @@ public class Quiz {
     @Column(nullable = false)
     private LocalDateTime updatedAt;
 
-    @OneToMany(fetch = FetchType.EAGER, cascade = CascadeType.ALL, orphanRemoval = true)
+    @OneToMany(fetch = FetchType.LAZY, cascade = CascadeType.ALL, orphanRemoval = true)
     @JoinColumn(name = "quiz_id")
     private List<QuizQuestion> questions;
 
-    @OneToMany(fetch = FetchType.EAGER, cascade = CascadeType.ALL, orphanRemoval = true)
+    @OneToMany(fetch = FetchType.LAZY, cascade = CascadeType.ALL, orphanRemoval = true)
     @JoinColumn(name = "quiz_id")
     private List<QuizAttempt> attempts = new ArrayList<>();
 
