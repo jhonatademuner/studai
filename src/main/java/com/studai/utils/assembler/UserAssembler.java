@@ -2,14 +2,18 @@ package com.studai.utils.assembler;
 
 import com.studai.domain.user.User;
 import com.studai.domain.user.dto.UserDTO;
+import com.studai.domain.user.dto.UserRegisterDTO;
+import lombok.RequiredArgsConstructor;
+import org.springframework.stereotype.Component;
 
-import java.util.UUID;
+@Component
+@RequiredArgsConstructor
+public class UserAssembler extends AbstractAssembler<User, UserDTO> {
 
-public class UserAssembler {
-
-    public static User toEntity(UserDTO dto) {
+    @Override
+    public User toEntity(UserDTO dto) {
         return User.builder()
-                .id(dto.getId() != null ? UUID.fromString(dto.getId()) : null)
+                .id(dto.getId() != null ? dto.getId() : null)
                 .username(dto.getUsername())
                 .email(dto.getEmail())
                 .password(dto.getPassword())
@@ -19,15 +23,25 @@ public class UserAssembler {
                 .build();
     }
 
-    public static UserDTO toDTO(User user) {
+    @Override
+    public UserDTO toDto(User user) {
         return UserDTO.builder()
-                .id(user.getId() != null ? user.getId().toString() : null)
+                .id(user.getId() != null ? user.getId() : null)
                 .username(user.getUsername())
                 .email(user.getEmail())
                 .password(user.getPassword())
                 .role(user.getRole())
                 .createdAt(user.getCreatedAt())
                 .updatedAt(user.getUpdatedAt())
+                .build();
+    }
+
+    public User toEntity(UserRegisterDTO dto) {
+        return User.builder()
+                .username(dto.getUsername())
+                .email(dto.getEmail())
+                .password(dto.getPassword())
+                .role(dto.getRole())
                 .build();
     }
 
