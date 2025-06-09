@@ -6,37 +6,41 @@ import com.studai.service.user.UserService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
 
-import java.util.UUID;
-
 @Component
 @RequiredArgsConstructor
 public class QuizAssembler extends AbstractAssembler<Quiz, QuizDTO>  {
 
     private final UserService userService;
     private final QuizQuestionAssembler questionAssembler;
-    private final QuizAttemptAssembler quizAttemptAssembler;
 
     public Quiz toEntity(QuizDTO dto){
-		return Quiz.builder()
-			.id(dto.getId() != null ? dto.getId() : null)
+		Quiz quiz = Quiz.builder()
+			.id(dto.getId())
 			.title(dto.getTitle())
 			.description(dto.getDescription())
-			.sourceType(dto.getSourceType() != null ? dto.getSourceType() : null)
-			.sourceUri(dto.getSourceUri() != null ? dto.getSourceUri() : null)
+			.languageCode(dto.getLanguageCode())
+			.sourceType(dto.getSourceType())
+			.sourceContent(dto.getSourceContent())
 			.user(userService.getCurrentUser())
 			.build();
+
+		questionAssembler.toEntityList(dto.getQuestions())
+				.forEach(quiz::addQuestion);
+
+		return quiz;
     }
 
     public QuizDTO toDto(Quiz entity) {
         return QuizDTO.builder()
-            .id(entity.getId() != null ? entity.getId() : null)
+            .id(entity.getId())
             .title(entity.getTitle())
             .description(entity.getDescription())
             .sourceType(entity.getSourceType())
-            .sourceUri(entity.getSourceUri())
-            .userId(entity.getUser() != null ? entity.getUser().getId().toString() : null)
+            .sourceContent(entity.getSourceContent())
+            .userId(entity.getUser() != null ? entity.getUser().getId() : null)
             .questions(questionAssembler.toDtoList(entity.getQuestions()))
-            .attempts(quizAttemptAssembler.toDtoList(entity.getAttempts()))
+			.createdAt(entity.getCreatedAt())
+			.updatedAt(entity.getUpdatedAt())
             .build();
     }
 

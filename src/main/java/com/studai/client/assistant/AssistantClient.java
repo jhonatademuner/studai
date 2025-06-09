@@ -1,7 +1,6 @@
 package com.studai.client.assistant;
 
 import com.studai.client.assistant.config.AssistantProperties;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.*;
 import org.springframework.stereotype.Component;
 import org.springframework.web.client.RestTemplate;
@@ -16,7 +15,6 @@ public class AssistantClient {
 	private final RestTemplate restTemplate;
 	private final AssistantProperties assistantProperties;
 
-	@Autowired
 	public AssistantClient(RestTemplate restTemplate, AssistantProperties assistantProperties) {
 		this.restTemplate = restTemplate;
 		this.assistantProperties = assistantProperties;

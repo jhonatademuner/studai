@@ -1,11 +1,12 @@
 package com.studai.domain.quiz.dto;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+import com.studai.domain.quiz.QuizLanguage;
 import com.studai.domain.quiz.question.dto.QuizQuestionDTO;
 import com.studai.domain.quiz.QuizSourceType;
-import com.studai.domain.quiz.attempt.dto.QuizAttemptDTO;
 import lombok.*;
 
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
@@ -19,12 +20,14 @@ import java.util.UUID;
 public class QuizDTO {
 
     private UUID id;
+    private UUID userId;
     private String title;
     private String description;
-    private List<QuizQuestionDTO> questions;
+    private QuizLanguage languageCode;
     private QuizSourceType sourceType;
-    private String sourceUri;
-    private String userId;
-    private List<QuizAttemptDTO> attempts = new ArrayList<>();
+    private String sourceContent;
+    private List<QuizQuestionDTO> questions = new ArrayList<>();
+    private LocalDateTime createdAt;
+    private LocalDateTime updatedAt;
 
 }

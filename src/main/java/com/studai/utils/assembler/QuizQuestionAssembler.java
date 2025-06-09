@@ -29,11 +29,11 @@ public class QuizQuestionAssembler extends AbstractAssembler<QuizQuestion, QuizQ
 
     @Override
     public QuizQuestion toEntity(QuizQuestionDTO dto) {
-        Quiz quiz = quizRepository.findById(dto.getQuizId())
+        Quiz quiz = dto.getQuizId() == null ? null : quizRepository.findById(dto.getQuizId())
                 .orElseThrow(() -> new IllegalArgumentException("Quiz not found: " + dto.getQuizId()));
 
         QuizQuestion question = QuizQuestion.builder()
-                .id(dto.getId() != null ? dto.getId() : null)
+                .id(dto.getId())
                 .questionType(dto.getQuestionType())
                 .statement(dto.getStatement())
                 .hint(dto.getHint())

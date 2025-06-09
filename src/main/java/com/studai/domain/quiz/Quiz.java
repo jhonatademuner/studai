@@ -32,10 +32,14 @@ public class Quiz {
 
     @Column(nullable = false)
     @Enumerated(EnumType.STRING)
+    private QuizLanguage languageCode;
+
+    @Column(nullable = false)
+    @Enumerated(EnumType.STRING)
     private QuizSourceType sourceType;
 
     @Column(nullable = false)
-    private String sourceUri;
+    private String sourceContent;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "user_id", nullable = false)
@@ -47,13 +51,9 @@ public class Quiz {
     @Column(nullable = false)
     private LocalDateTime updatedAt;
 
-    @OneToMany(fetch = FetchType.LAZY, cascade = CascadeType.ALL, orphanRemoval = true)
-    @JoinColumn(name = "quiz_id")
-    private List<QuizQuestion> questions;
-
-    @OneToMany(fetch = FetchType.LAZY, cascade = CascadeType.ALL, orphanRemoval = true)
-    @JoinColumn(name = "quiz_id")
-    private List<QuizAttempt> attempts = new ArrayList<>();
+    @OneToMany(mappedBy = "quiz", cascade = CascadeType.ALL, orphanRemoval = true)
+    @Builder.Default
+    private List<QuizQuestion> questions = new ArrayList<>();
 
     @PrePersist
     protected void onCreate() {
@@ -65,4 +65,15 @@ public class Quiz {
     protected void onUpdate() {
         updatedAt = LocalDateTime.now();
     }
+
+    public void addQuestion(QuizQuestion question) {
+        question.setQuiz(this);
+        this.questions.add(question);
+    }
+
+    public void removeQuestion(QuizQuestion question) {
+        question.setQuiz(null);
+        this.questions.remove(question);
+    }
+
 }

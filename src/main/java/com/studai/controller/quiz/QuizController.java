@@ -1,5 +1,6 @@
 package com.studai.controller.quiz;
 
+import com.studai.domain.quiz.dto.QuizCreateDTO;
 import com.studai.domain.quiz.dto.QuizDTO;
 import com.studai.service.quiz.QuizService;
 import org.springframework.http.HttpStatus;
@@ -20,12 +21,8 @@ public class QuizController {
     }
 
     @PostMapping("/v1/quiz")
-    public ResponseEntity<QuizDTO> create(
-            @RequestParam String videoId,
-            @RequestParam int questionsNumber,
-            @RequestParam String language
-    ) {
-        QuizDTO quiz = quizService.create(videoId, questionsNumber, language);
+    public ResponseEntity<QuizDTO> create(@RequestBody QuizCreateDTO quizCreateDTO) {
+        QuizDTO quiz = quizService.create(quizCreateDTO);
         return ResponseEntity.status(HttpStatus.OK).body(quiz);
     }
 
@@ -37,7 +34,7 @@ public class QuizController {
 
     @GetMapping("/v1/quiz")
     public ResponseEntity<List<QuizDTO>> findAll(
-            @RequestParam (required = false, defaultValue = "1") int page,
+            @RequestParam (required = false, defaultValue = "0") int page,
             @RequestParam (required = false, defaultValue = "10") int size
     ){
         List<QuizDTO> quizzes = quizService.find(page, size);
