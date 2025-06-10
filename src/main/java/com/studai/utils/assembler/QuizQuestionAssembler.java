@@ -4,6 +4,7 @@ import com.studai.domain.quiz.question.QuizQuestion;
 import com.studai.domain.quiz.question.dto.QuizQuestionDTO;
 import com.studai.domain.quiz.Quiz;
 import com.studai.repository.quiz.QuizRepository;
+import io.micrometer.common.util.StringUtils;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
 
@@ -38,7 +39,7 @@ public class QuizQuestionAssembler extends AbstractAssembler<QuizQuestion, QuizQ
                 .statement(dto.getStatement())
                 .hint(dto.getHint())
                 .explanation(dto.getExplanation())
-                .correctAnswer(dto.getCorrectAnswer().toString())
+                .correctAnswer(dto.getCorrectAnswer())
                 .quiz(quiz)
                 .build();
 
@@ -52,10 +53,10 @@ public class QuizQuestionAssembler extends AbstractAssembler<QuizQuestion, QuizQ
         entity.setStatement(dto.getStatement());
         entity.setHint(dto.getHint());
         entity.setExplanation(dto.getExplanation());
-        entity.setCorrectAnswer(dto.getCorrectAnswer().toString());
+        entity.setCorrectAnswer(dto.getCorrectAnswer());
         entity.setOptions(dto.getOptions());
 
-        if (!entity.getQuiz().getId().equals(dto.getQuizId())) {
+        if (dto.getQuizId() != null && !entity.getQuiz().getId().equals(dto.getQuizId())) {
             Quiz quiz = quizRepository.findById(dto.getQuizId())
                     .orElseThrow(() -> new IllegalArgumentException("Quiz not found: " + dto.getQuizId()));
             entity.setQuiz(quiz);

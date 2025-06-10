@@ -1,6 +1,5 @@
 package com.studai.domain.quiz.question;
 
-
 import com.studai.domain.quiz.Quiz;
 import jakarta.persistence.*;
 import lombok.*;

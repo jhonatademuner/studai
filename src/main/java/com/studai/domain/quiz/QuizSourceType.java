@@ -13,9 +13,7 @@ public enum QuizSourceType {
 
     PROMPT_BASED("From a user-written prompt with specific instructions. "
             + "Example: 'Create a quiz about the Cold War, focusing on key events and political figures, "
-            + "targeted at high school students.'"),
-
-    TOPIC_BASED("From a broad thematic topic (e.g., 'Cloud Computing', 'European History').");
+            + "targeted at high school students.'");
 
     private final String description;
 

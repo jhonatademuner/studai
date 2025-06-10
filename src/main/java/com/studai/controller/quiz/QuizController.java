@@ -38,13 +38,13 @@ public class QuizController {
             @RequestParam (required = false, defaultValue = "10") int size
     ){
         List<QuizDTO> quizzes = quizService.find(page, size);
-        return ResponseEntity.ok(quizzes);
+        return ResponseEntity.status(HttpStatus.OK).body(quizzes);
     }
 
     @DeleteMapping("/v1/quiz/{id}")
     public ResponseEntity<Void> delete(@PathVariable UUID id){
         quizService.delete(id);
-        return ResponseEntity.ok().build();
+        return ResponseEntity.status(HttpStatus.OK).build();
     }
 
 }

@@ -20,7 +20,7 @@ public class QuizQuestionDTO {
     private String statement;
     private String hint;
     private String explanation;
-    private Object correctAnswer;
+    private String correctAnswer;
     private UUID quizId;
     private List<String> options;
 
