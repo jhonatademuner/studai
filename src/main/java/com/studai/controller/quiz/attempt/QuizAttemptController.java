@@ -1,5 +1,6 @@
 package com.studai.controller.quiz.attempt;
 
+import com.studai.domain.quiz.attempt.dto.QuizAttemptCreateDTO;
 import com.studai.domain.quiz.attempt.dto.QuizAttemptDTO;
 import com.studai.service.quiz.attempt.QuizAttemptService;
 import org.springframework.http.HttpStatus;
@@ -20,8 +21,8 @@ public class QuizAttemptController {
 	}
 
 	@PostMapping("/v1/quiz/attempt")
-	public ResponseEntity<QuizAttemptDTO> create(QuizAttemptDTO quizAttemptDTO) {
-		QuizAttemptDTO attempt = quizAttemptService.create(quizAttemptDTO);
+	public ResponseEntity<QuizAttemptDTO> create(@RequestBody QuizAttemptCreateDTO createDTO) {
+		QuizAttemptDTO attempt = quizAttemptService.create(createDTO);
 		return ResponseEntity.status(HttpStatus.CREATED).body(attempt);
 	}
 
