@@ -43,7 +43,7 @@ public class QuizAttemptService {
 		this.quizAttemptAssembler = new QuizAttemptAssembler(quizRepository, userService, quizAttemptAnswerAssembler);
 	}
 
-	public QuizAttemptDTO create(QuizAttemptCreateDTO dto) {
+	public QuizAttemptDTO create(QuizAttemptCreateDTO dto, boolean isGuestUser) {
 		Map<UUID, String> correctAnswers = this.getCorrectAnswers(dto.getQuizId());
 		List<QuizAttemptAnswerDTO> answers = this.assembleAnswersDTOs(dto.getAnswers(), correctAnswers);
 		BigDecimal score = this.calculateScore(answers);
@@ -51,9 +51,9 @@ public class QuizAttemptService {
 				.quizId(dto.getQuizId())
 				.score(score)
 				.timeSpent(dto.getTimeSpent())
+				.guestUser(isGuestUser)
+				.guestName(isGuestUser ? dto.getGuestName() : null)
 				.answers(answers)
-				.guestName(dto.getGuestName())
-				.guestUser(dto.isGuestUser())
 				.build();
 		QuizAttempt entity = quizAttemptAssembler.toEntity(quizAttemptDTO);
 		return quizAttemptAssembler.toDto(quizAttemptRepository.save(entity));

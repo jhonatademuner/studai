@@ -22,7 +22,13 @@ public class QuizAttemptController {
 
 	@PostMapping("/v1/quiz/attempt")
 	public ResponseEntity<QuizAttemptDTO> create(@RequestBody QuizAttemptCreateDTO createDTO) {
-		QuizAttemptDTO attempt = quizAttemptService.create(createDTO);
+		QuizAttemptDTO attempt = quizAttemptService.create(createDTO, false);
+		return ResponseEntity.status(HttpStatus.CREATED).body(attempt);
+	}
+
+	@PostMapping("/v1/quiz/guest/attempt")
+	public ResponseEntity<QuizAttemptDTO> guestCreate(@RequestBody QuizAttemptCreateDTO createDTO) {
+		QuizAttemptDTO attempt = quizAttemptService.create(createDTO, true);
 		return ResponseEntity.status(HttpStatus.CREATED).body(attempt);
 	}
 

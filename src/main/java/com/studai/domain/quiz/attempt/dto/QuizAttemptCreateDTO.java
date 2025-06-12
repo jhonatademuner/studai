@@ -17,7 +17,6 @@ public class QuizAttemptCreateDTO {
 
 	private UUID quizId;
 	private Long timeSpent;
-	private boolean guestUser;
 	private String guestName;
 	private Map<UUID, String> answers = new HashMap<>();
 

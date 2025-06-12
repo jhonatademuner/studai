@@ -36,8 +36,12 @@ public class QuizAttemptAssembler extends AbstractAssembler<QuizAttempt, QuizAtt
         Quiz quiz = dto.getQuizId() == null ? null : quizRepository.findById(dto.getQuizId())
                 .orElseThrow(() -> new IllegalArgumentException("Quiz not found: " + dto.getQuizId()));
 
-        User user = userService.getCurrentUser();
-        if(dto.isGuestUser() && quiz != null) user = quiz.getUser();
+        User user;
+        if(dto.isGuestUser() && quiz != null) {
+            user = quiz.getUser();
+        } else {
+            user = userService.getCurrentUser();
+        }
 
         QuizAttempt attempt = QuizAttempt.builder()
                 .id(dto.getId() != null ? dto.getId() : null)
