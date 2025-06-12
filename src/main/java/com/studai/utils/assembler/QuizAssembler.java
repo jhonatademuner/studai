@@ -37,7 +37,6 @@ public class QuizAssembler extends AbstractAssembler<Quiz, QuizDTO>  {
             .description(entity.getDescription())
             .sourceType(entity.getSourceType())
             .sourceContent(entity.getSourceContent())
-            .userId(entity.getUser() != null ? entity.getUser().getId() : null)
             .questions(questionAssembler.toDtoList(entity.getQuestions()))
 			.createdAt(entity.getCreatedAt())
 			.updatedAt(entity.getUpdatedAt())
