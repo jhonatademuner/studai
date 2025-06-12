@@ -1,14 +1,16 @@
 package com.studai.domain.quiz.dto;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
-import com.studai.domain.question.dto.QuestionDTO;
+import com.fasterxml.jackson.annotation.JsonInclude;
+import com.studai.domain.quiz.QuizLanguage;
+import com.studai.domain.quiz.question.dto.QuizQuestionDTO;
 import com.studai.domain.quiz.QuizSourceType;
-import com.studai.domain.quiz.attempt.dto.QuizAttemptDTO;
-import jakarta.persistence.Column;
 import lombok.*;
 
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.UUID;
 
 @Getter
 @Setter
@@ -16,15 +18,17 @@ import java.util.List;
 @AllArgsConstructor
 @Builder
 @JsonIgnoreProperties(ignoreUnknown = true)
+@JsonInclude(JsonInclude.Include.NON_NULL)
 public class QuizDTO {
 
-    private String id;
+    private UUID id;
     private String title;
     private String description;
-    private List<QuestionDTO> questions;
+    private QuizLanguage languageCode;
     private QuizSourceType sourceType;
-    private String sourceUri;
-    private String userId;
-    private List<QuizAttemptDTO> attempts = new ArrayList<>();
+    private String sourceContent;
+    private List<QuizQuestionDTO> questions = new ArrayList<>();
+    private LocalDateTime createdAt;
+    private LocalDateTime updatedAt;
 
 }

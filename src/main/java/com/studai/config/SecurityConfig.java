@@ -22,19 +22,22 @@ import org.springframework.security.web.authentication.UsernamePasswordAuthentic
 @EnableWebSecurity
 public class SecurityConfig {
 
-    @Autowired
-    private StudaiUserDetailsService userDetailsService;
+    private final StudaiUserDetailsService userDetailsService;
+    private final JWTFilter jwtFilter;
 
-    @Autowired
-    private JWTFilter jwtFilter;
+    public SecurityConfig(StudaiUserDetailsService userDetailsService, JWTFilter jwtFilter) {
+        this.userDetailsService = userDetailsService;
+        this.jwtFilter = jwtFilter;
+    }
 
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
         return http.csrf(AbstractHttpConfigurer::disable)
             .authorizeHttpRequests(request -> request
                 .requestMatchers(
-                    "/api/user/register",
-                    "/api/user/login",
+                    "/api/v1/register",
+                    "/api/v1/login",
+                    "/api/v1/quiz/guest/attempt",
                     "/swagger-ui/**",
                     "/v3/api-docs/**",
                     "/webjars/**"

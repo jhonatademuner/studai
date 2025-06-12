@@ -1,6 +1,0 @@
-ALTER TABLE tquiz ALTER COLUMN user_id DROP NOT NULL;
-
-ALTER TABLE tquiz
-DROP CONSTRAINT tquiz_user_id_fkey,
-ADD CONSTRAINT tquiz_user_id_fkey
-FOREIGN KEY (user_id) REFERENCES tuser(id) ON DELETE SET NULL;
