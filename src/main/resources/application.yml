@@ -26,6 +26,12 @@ spring:
 server:
   port: 5000
 
+jwt:
+  secret: U2Pu/ltu8g6ThjB+SFC4DAlCmwPWDHvXMjoBeGEDiv4=
+  expiration-ms: 1800000  # 30 minutes
+  issuer: studai-service
+  audience: studai-client
+
 assistant:
   base-uri: http://127.0.0.1:8000/api
   openai-api-key: sk-xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
