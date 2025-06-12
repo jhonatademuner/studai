@@ -1,6 +1,6 @@
 package com.studai.client.assistant;
 
-import com.studai.client.assistant.config.AssistantProperties;
+import com.studai.config.properties.AssistantProperties;
 import org.springframework.http.*;
 import org.springframework.stereotype.Component;
 import org.springframework.web.client.RestTemplate;

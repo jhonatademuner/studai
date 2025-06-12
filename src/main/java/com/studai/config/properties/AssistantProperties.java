@@ -1,4 +1,4 @@
-package com.studai.client.assistant.config;
+package com.studai.config.properties;
 
 import lombok.Getter;
 import lombok.Setter;
