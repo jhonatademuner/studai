@@ -29,7 +29,6 @@ public class QuizService {
 
 	public QuizService(
             QuizRepository quizRepository,
-            QuizAttemptRepository quizAttemptRepository,
             UserService userService,
             AssistantClient assistantClient) {
         this.quizRepository = quizRepository;

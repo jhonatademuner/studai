@@ -1,6 +1,7 @@
 package com.studai.domain.quiz.dto;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+import com.fasterxml.jackson.annotation.JsonInclude;
 import com.studai.domain.quiz.QuizLanguage;
 import com.studai.domain.quiz.question.dto.QuizQuestionDTO;
 import com.studai.domain.quiz.QuizSourceType;
@@ -17,6 +18,7 @@ import java.util.UUID;
 @AllArgsConstructor
 @Builder
 @JsonIgnoreProperties(ignoreUnknown = true)
+@JsonInclude(JsonInclude.Include.NON_NULL)
 public class QuizDTO {
 
     private UUID id;
