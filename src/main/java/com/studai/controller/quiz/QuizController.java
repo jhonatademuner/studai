@@ -3,6 +3,7 @@ package com.studai.controller.quiz;
 import com.studai.domain.quiz.dto.QuizCreateDTO;
 import com.studai.domain.quiz.dto.QuizDTO;
 import com.studai.service.quiz.QuizService;
+import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -12,13 +13,10 @@ import java.util.UUID;
 
 @RestController
 @RequestMapping("/api")
+@RequiredArgsConstructor
 public class QuizController {
 
     private final QuizService quizService;
-
-    public QuizController(QuizService quizService) {
-        this.quizService = quizService;
-    }
 
     @PostMapping("/v1/quiz")
     public ResponseEntity<QuizDTO> create(@RequestBody QuizCreateDTO quizCreateDTO) {
