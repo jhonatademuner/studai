@@ -5,11 +5,10 @@ import com.studai.domain.quiz.Quiz;
 import com.studai.domain.quiz.dto.QuizCreateDTO;
 import com.studai.domain.quiz.dto.QuizDTO;
 import com.studai.repository.quiz.QuizRepository;
-import com.studai.repository.quiz.attempt.QuizAttemptRepository;
 import com.studai.service.user.UserService;
-import com.studai.utils.assembler.QuizQuestionAssembler;
 import com.studai.utils.assembler.QuizAssembler;
 import com.studai.utils.exception.ResourceNotFoundException;
+import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
@@ -20,23 +19,13 @@ import java.util.Map;
 import java.util.UUID;
 
 @Service
+@RequiredArgsConstructor
 public class QuizService {
 
     private final QuizRepository quizRepository;
+    private final QuizAssembler quizAssembler;
     private final UserService userService;
     private final AssistantClient assistantClient;
-    private final QuizAssembler quizAssembler;
-
-	public QuizService(
-            QuizRepository quizRepository,
-            UserService userService,
-            AssistantClient assistantClient) {
-        this.quizRepository = quizRepository;
-        this.userService = userService;
-        this.assistantClient = assistantClient;
-		QuizQuestionAssembler questionAssembler = new QuizQuestionAssembler(quizRepository);
-        this.quizAssembler = new QuizAssembler(userService, questionAssembler);
-    }
 
     public QuizDTO create(QuizCreateDTO quizCreateDTO) {
         QuizDTO quizDTO = this.generateQuiz(quizCreateDTO);

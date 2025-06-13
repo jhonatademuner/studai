@@ -7,6 +7,7 @@ import com.studai.repository.quiz.question.QuizQuestionRepository;
 import com.studai.repository.quiz.QuizRepository;
 import com.studai.utils.assembler.QuizQuestionAssembler;
 import com.studai.utils.exception.ResourceNotFoundException;
+import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
@@ -15,19 +16,12 @@ import java.util.List;
 import java.util.UUID;
 
 @Service
+@RequiredArgsConstructor
 public class QuizQuestionService {
 
     private final QuizQuestionRepository questionRepository;
     private final QuizQuestionAssembler questionAssembler;
     private final QuizRepository quizRepository;
-
-    public QuizQuestionService(
-            QuizQuestionRepository questionRepository,
-            QuizRepository quizRepository) {
-        this.questionRepository = questionRepository;
-        this.questionAssembler = new QuizQuestionAssembler(quizRepository);
-        this.quizRepository = quizRepository;
-    }
 
     public QuizQuestionDTO create(QuizQuestionDTO dto){
         QuizQuestion entity = questionRepository.save(questionAssembler.toEntity(dto));

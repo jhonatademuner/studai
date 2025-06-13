@@ -7,10 +7,9 @@ import com.studai.domain.quiz.attempt.dto.QuizAttemptDTO;
 import com.studai.domain.quiz.question.QuizQuestion;
 import com.studai.repository.quiz.QuizRepository;
 import com.studai.repository.quiz.attempt.QuizAttemptRepository;
-import com.studai.repository.quiz.question.QuizQuestionRepository;
 import com.studai.service.user.UserService;
-import com.studai.utils.assembler.QuizAttemptAnswerAssembler;
 import com.studai.utils.assembler.QuizAttemptAssembler;
+import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
@@ -24,24 +23,13 @@ import java.util.UUID;
 import java.util.stream.Collectors;
 
 @Service
+@RequiredArgsConstructor
 public class QuizAttemptService {
 
-	private final QuizRepository quizRepository;
-	private final UserService userService;
 	private final QuizAttemptRepository quizAttemptRepository;
 	private final QuizAttemptAssembler quizAttemptAssembler;
-
-	public QuizAttemptService(
-			QuizAttemptRepository quizAttemptRepository,
-			QuizQuestionRepository quizQuestionRepository,
-			QuizRepository quizRepository,
-			UserService userService) {
-		this.quizRepository = quizRepository;
-		this.userService = userService;
-		QuizAttemptAnswerAssembler quizAttemptAnswerAssembler = new QuizAttemptAnswerAssembler(quizAttemptRepository, quizQuestionRepository);
-		this.quizAttemptRepository = quizAttemptRepository;
-		this.quizAttemptAssembler = new QuizAttemptAssembler(quizRepository, userService, quizAttemptAnswerAssembler);
-	}
+	private final QuizRepository quizRepository;
+	private final UserService userService;
 
 	public QuizAttemptDTO create(QuizAttemptCreateDTO dto, boolean isGuestUser) {
 		Map<UUID, String> correctAnswers = this.getCorrectAnswers(dto.getQuizId());

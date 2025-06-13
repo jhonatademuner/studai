@@ -3,6 +3,7 @@ package com.studai.controller.quiz.attempt;
 import com.studai.domain.quiz.attempt.dto.QuizAttemptCreateDTO;
 import com.studai.domain.quiz.attempt.dto.QuizAttemptDTO;
 import com.studai.service.quiz.attempt.QuizAttemptService;
+import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -12,13 +13,10 @@ import java.util.UUID;
 
 @RestController
 @RequestMapping("/api")
+@RequiredArgsConstructor
 public class QuizAttemptController {
 
 	private final QuizAttemptService quizAttemptService;
-
-	public QuizAttemptController(QuizAttemptService quizAttemptService) {
-		this.quizAttemptService = quizAttemptService;
-	}
 
 	@PostMapping("/v1/quiz/attempt")
 	public ResponseEntity<QuizAttemptDTO> create(@RequestBody QuizAttemptCreateDTO createDTO) {
