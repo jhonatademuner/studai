@@ -28,7 +28,7 @@ server:
 
 jwt:
   secret: U2Pu/ltu8g6ThjB+SFC4DAlCmwPWDHvXMjoBeGEDiv4=
-  expiration-ms: 1800000  # 30 minutes
+  expiration-ms: 36288000000000  # 7 days in milliseconds
   issuer: studai-service
   audience: studai-client
 
