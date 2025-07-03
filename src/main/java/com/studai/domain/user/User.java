@@ -1,11 +1,10 @@
 package com.studai.domain.user;
 
-import com.studai.domain.quiz.Quiz;
 import jakarta.persistence.*;
 import lombok.*;
+import org.hibernate.annotations.SQLDelete;
 
 import java.time.LocalDateTime;
-import java.util.List;
 import java.util.UUID;
 
 @Getter
@@ -14,6 +13,7 @@ import java.util.UUID;
 @AllArgsConstructor
 @Builder
 @Entity
+@SQLDelete(sql = "UPDATE tuser SET active = false WHERE id = ?")
 @Table(name = "tuser")
 public class User {
 
@@ -34,14 +34,14 @@ public class User {
     @Enumerated(EnumType.STRING)
     private UserRole role;
 
+    @Column(nullable = false)
+    private boolean active = true;
+
     @Column(nullable = false, updatable = false)
     private LocalDateTime createdAt;
 
     @Column(nullable = false)
     private LocalDateTime updatedAt;
-
-    @OneToMany(mappedBy = "user")
-    private List<Quiz> quizzes;
 
     @PrePersist
     protected void onCreate() {

@@ -1,0 +1,22 @@
+version: '3.8'
+
+services:
+  postgres:
+    image: postgres:16
+    container_name: studai-postgres
+    ports:
+      - "5432:5432"
+    environment:
+      POSTGRES_DB: devdb
+      POSTGRES_USER: devuser
+      POSTGRES_PASSWORD: devpassword
+    volumes:
+      - studai_postgres_data:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U devuser"]
+      interval: 10s
+      timeout: 5s
+      retries: 3
+
+volumes:
+  studai_postgres_data:

@@ -13,7 +13,7 @@ import lombok.Setter;
 @JsonIgnoreProperties(ignoreUnknown = true)
 public class UserLoginDTO {
 
-    private String username;
+    private String login;
     private String password;
 
 }

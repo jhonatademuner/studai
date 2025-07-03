@@ -15,11 +15,12 @@ import java.util.UUID;
 @JsonIgnoreProperties(ignoreUnknown = true)
 public class UserDTO {
 
-    private String id;
+    private UUID id;
     private String username;
     private String email;
     private String password;
     private UserRole role;
+    private boolean active = true;
     private LocalDateTime createdAt;
     private LocalDateTime updatedAt;
 

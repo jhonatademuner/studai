@@ -1,0 +1,37 @@
+spring:
+  application:
+    name: studai
+
+  datasource:
+    driver-class-name: org.postgresql.Driver
+    url: jdbc:postgresql://localhost:5432/devdb
+    username: devuser
+    password: devpassword
+
+  jpa:
+    database-platform: org.hibernate.dialect.PostgreSQLDialect
+    database: postgresql
+
+  flyway:
+    sql-migration-prefix: 20
+    enabled: true
+    locations: classpath:db/migration
+    baseline-on-migrate: true
+
+  security:
+    user:
+      name: studai_user
+      password: studai_password
+
+server:
+  port: 5000
+
+jwt:
+  secret: U2Pu/ltu8g6ThjB+SFC4DAlCmwPWDHvXMjoBeGEDiv4=
+  expiration-ms: 36288000000000  # 7 days in milliseconds
+  issuer: studai-service
+  audience: studai-client
+
+assistant:
+  base-uri: http://127.0.0.1:8000/api
+  openai-api-key: sk-xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx

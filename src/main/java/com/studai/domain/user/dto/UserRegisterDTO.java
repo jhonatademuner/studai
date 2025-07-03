@@ -1,6 +1,7 @@
 package com.studai.domain.user.dto;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+import com.studai.domain.user.UserRole;
 import lombok.*;
 
 @Getter
@@ -13,5 +14,6 @@ public class UserRegisterDTO {
     private String username;
     private String password;
     private String email;
+    private UserRole role;
 
 }

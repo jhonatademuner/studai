@@ -1,52 +1,46 @@
 package com.studai.utils.assembler;
 
-import com.studai.domain.question.Question;
-import com.studai.domain.question.dto.QuestionDTO;
 import com.studai.domain.quiz.Quiz;
-import com.studai.domain.quiz.attempt.QuizAttempt;
-import com.studai.domain.quiz.attempt.dto.QuizAttemptDTO;
 import com.studai.domain.quiz.dto.QuizDTO;
-import com.studai.domain.user.User;
+import com.studai.service.user.UserService;
+import lombok.RequiredArgsConstructor;
+import org.springframework.stereotype.Component;
 
-import java.util.List;
-import java.util.UUID;
+@Component
+@RequiredArgsConstructor
+public class QuizAssembler extends AbstractAssembler<Quiz, QuizDTO>  {
 
-public class QuizAssembler {
+    private final UserService userService;
+    private final QuizQuestionAssembler questionAssembler;
 
-    public static Quiz toEntity(QuizDTO dto, User user){
+    public Quiz toEntity(QuizDTO dto){
+		Quiz quiz = Quiz.builder()
+			.id(dto.getId())
+			.title(dto.getTitle())
+			.description(dto.getDescription())
+			.languageCode(dto.getLanguageCode())
+			.sourceType(dto.getSourceType())
+			.sourceContent(dto.getSourceContent())
+			.user(userService.getCurrentUser())
+			.build();
 
-        Quiz quiz = Quiz.builder()
-            .id(dto.getId() != null ? UUID.fromString(dto.getId()) : null)
-            .title(dto.getTitle())
-            .description(dto.getDescription())
-            .sourceType(dto.getSourceType() != null ? dto.getSourceType() : null)
-            .sourceUri(dto.getSourceUri() != null ? dto.getSourceUri() : null)
-            .user(user)
-            .build();
+		questionAssembler.toEntityList(dto.getQuestions())
+				.forEach(quiz::addQuestion);
 
-        List<Question> questions = QuestionAssembler.toEntityList(dto.getQuestions(), quiz);
-        quiz.setQuestions(questions);
-
-        List<QuizAttempt> attempts = QuizAttemptAssembler.toEntityList(dto.getAttempts(), quiz, user);
-        quiz.setAttempts(attempts);
-
-        return quiz;
+		return quiz;
     }
 
-    public static QuizDTO toDTO(Quiz quiz) {
-
-        List<QuestionDTO> questionDTOs = QuestionAssembler.toDTOList(quiz.getQuestions());
-        List<QuizAttemptDTO> attemptDTOS = QuizAttemptAssembler.toDTOList(quiz.getAttempts());
-
+    public QuizDTO toDto(Quiz entity) {
         return QuizDTO.builder()
-            .id(quiz.getId() != null ? quiz.getId().toString() : null)
-            .title(quiz.getTitle())
-            .description(quiz.getDescription())
-            .sourceType(quiz.getSourceType())
-            .sourceUri(quiz.getSourceUri())
-            .userId(quiz.getUser() != null ? quiz.getUser().getId().toString() : null)
-            .questions(questionDTOs)
-            .attempts(attemptDTOS)
+            .id(entity.getId())
+            .title(entity.getTitle())
+            .description(entity.getDescription())
+            .sourceType(entity.getSourceType())
+            .sourceContent(entity.getSourceContent())
+			.languageCode(entity.getLanguageCode())
+            .questions(questionAssembler.toDtoList(entity.getQuestions()))
+			.createdAt(entity.getCreatedAt())
+			.updatedAt(entity.getUpdatedAt())
             .build();
     }
 

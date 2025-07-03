@@ -1,142 +1,141 @@
 package com.studai.service.quiz;
 
 import com.studai.client.assistant.AssistantClient;
-import com.studai.domain.question.Question;
 import com.studai.domain.quiz.Quiz;
+import com.studai.domain.quiz.QuizLanguage;
 import com.studai.domain.quiz.QuizSourceType;
-import com.studai.domain.quiz.attempt.QuizAttempt;
-import com.studai.domain.quiz.attempt.dto.QuizAttemptDTO;
+import com.studai.domain.quiz.dto.QuizCreateDTO;
 import com.studai.domain.quiz.dto.QuizDTO;
 import com.studai.domain.user.User;
-import com.studai.repository.question.QuestionRepository;
 import com.studai.repository.quiz.QuizRepository;
-import com.studai.repository.quiz.attempt.QuizAttemptRepository;
 import com.studai.service.user.UserService;
+import com.studai.utils.assembler.QuizAssembler;
 import com.studai.utils.exception.ResourceNotFoundException;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-import org.junit.jupiter.api.extension.ExtendWith;
-import org.mockito.InjectMocks;
-import org.mockito.Mock;
-import org.mockito.junit.jupiter.MockitoExtension;
+import org.springframework.data.domain.*;
+import org.springframework.http.ResponseEntity;
 
-import java.time.LocalDateTime;
 import java.util.*;
 
 import static org.junit.jupiter.api.Assertions.*;
+import static org.mockito.ArgumentMatchers.*;
 import static org.mockito.Mockito.*;
 
-@ExtendWith(MockitoExtension.class)
 class QuizServiceTest {
 
-    @InjectMocks
     private QuizService quizService;
-
-    @Mock
     private QuizRepository quizRepository;
-
-    @Mock
-    private QuizAttemptRepository quizAttemptRepository;
-
-    @Mock
-    private QuestionRepository questionRepository;
-
-    @Mock
+    private QuizAssembler quizAssembler;
     private UserService userService;
-
-    @Mock
     private AssistantClient assistantClient;
 
-    private User user;
-    private Quiz quiz;
-    private QuizDTO quizDTO;
-    private UUID quizId;
+    private final UUID quizId = UUID.randomUUID();
+    private final User currentUser = User.builder()
+			.id(UUID.randomUUID())
+			.username("testUser")
+			.email("testUser@example.com")
+			.build();;
 
     @BeforeEach
     void setUp() {
-        quizId = UUID.randomUUID();
-        user = new User();
-        user.setId(UUID.randomUUID());
-        quiz = new Quiz();
+        quizRepository = mock(QuizRepository.class);
+        quizAssembler = mock(QuizAssembler.class);
+        userService = mock(UserService.class);
+        assistantClient = mock(AssistantClient.class);
+
+        quizService = new QuizService(quizRepository, quizAssembler, userService, assistantClient);
+
+        when(userService.getCurrentUser()).thenReturn(currentUser);
+    }
+
+    @Test
+    void testCreateQuiz() {
+        QuizCreateDTO createDTO = new QuizCreateDTO();
+        createDTO.setSourceContent("some content");
+        createDTO.setSourceType(QuizSourceType.PROMPT_BASED);
+        createDTO.setLanguageCode(QuizLanguage.PT);
+
+        QuizDTO generatedDTO = new QuizDTO();
+        generatedDTO.setId(quizId);
+        generatedDTO.setTitle("Generated Quiz");
+
+        Quiz entity = new Quiz();
+        entity.setId(quizId);
+
+        when(assistantClient.postRequest(anyString(), any(), anyMap(), isNull(), eq(QuizDTO.class)))
+                .thenReturn(ResponseEntity.ok(generatedDTO));
+        when(quizAssembler.toEntity(generatedDTO)).thenReturn(entity);
+        when(quizRepository.save(entity)).thenReturn(entity);
+        when(quizAssembler.toDto(entity)).thenReturn(generatedDTO);
+
+        QuizDTO result = quizService.create(createDTO);
+
+        assertNotNull(result);
+        assertEquals("Generated Quiz", result.getTitle());
+        verify(quizRepository).save(entity);
+    }
+
+    @Test
+    void testFindById_WhenExists() {
+        Quiz quiz = new Quiz();
         quiz.setId(quizId);
-        quiz.setUser(user);
-        quiz.setSourceType(QuizSourceType.YOUTUBE_VIDEO);
-        quizDTO = new QuizDTO();
-        quizDTO.setId(quizId.toString());
-    }
 
-    @Test
-    void testFindById_Success() {
-        when(quizRepository.findById(quizId)).thenReturn(Optional.of(quiz));
+        QuizDTO quizDTO = new QuizDTO();
+        quizDTO.setId(quizId);
 
-        QuizDTO result = quizService.findById(quizId.toString());
+        when(quizRepository.findByIdAndUser(quizId, currentUser)).thenReturn(Optional.of(quiz));
+        when(quizAssembler.toDto(quiz)).thenReturn(quizDTO);
+
+        QuizDTO result = quizService.findById(quizId);
 
         assertNotNull(result);
-        assertEquals(quizId.toString(), result.getId());
+        assertEquals(quizId, result.getId());
     }
 
     @Test
-    void testFindById_NotFound() {
-        when(quizRepository.findById(quizId)).thenReturn(Optional.empty());
+    void testFindById_WhenNotFound() {
+        when(quizRepository.findByIdAndUser(quizId, currentUser)).thenReturn(Optional.empty());
 
-        assertThrows(ResourceNotFoundException.class, () -> quizService.findById(quizId.toString()));
+        assertThrows(ResourceNotFoundException.class, () -> quizService.findById(quizId));
     }
 
     @Test
-    void testFindAll_Success() {
-        when(userService.getCurrentUser()).thenReturn(user);
-        when(quizRepository.findByUser(user)).thenReturn(List.of(quiz));
+    void testFindAllPaginated() {
+        Quiz quiz1 = new Quiz();
+        Quiz quiz2 = new Quiz();
+        List<Quiz> quizzes = List.of(quiz1, quiz2);
 
-        List<QuizDTO> results = quizService.findAll();
+        QuizDTO dto1 = new QuizDTO();
+        QuizDTO dto2 = new QuizDTO();
+        List<QuizDTO> quizDTOs = List.of(dto1, dto2);
 
-        assertFalse(results.isEmpty());
-        assertEquals(quizId.toString(), results.get(0).getId());
+        Pageable pageable = PageRequest.of(0, 10, Sort.by("createdAt").descending());
+
+        when(quizRepository.findByUser(currentUser, pageable)).thenReturn(quizzes);
+        when(quizAssembler.toDtoList(quizzes)).thenReturn(quizDTOs);
+
+        List<QuizDTO> result = quizService.find(0, 10);
+
+        assertEquals(2, result.size());
     }
 
     @Test
-    void testFindAll_Empty() {
-        when(userService.getCurrentUser()).thenReturn(user);
-        when(quizRepository.findByUser(user)).thenReturn(List.of());
+    void testDelete_WhenExists() {
+        Quiz quiz = new Quiz();
+        quiz.setId(quizId);
 
-        assertEquals(Collections.emptyList(), quizService.findAll());
+        when(quizRepository.findByIdAndUser(quizId, currentUser)).thenReturn(Optional.of(quiz));
+
+        quizService.delete(quizId);
+
+        verify(quizRepository).delete(quiz);
     }
 
     @Test
-    void testDelete_Success() {
-        when(quizRepository.findById(quizId)).thenReturn(Optional.of(quiz));
-        doNothing().when(quizRepository).delete(quiz);
+    void testDelete_WhenNotFound() {
+        when(quizRepository.findByIdAndUser(quizId, currentUser)).thenReturn(Optional.empty());
 
-        QuizDTO result = quizService.delete(quizId.toString());
-
-        assertNotNull(result);
-        assertEquals(quizId.toString(), result.getId());
-        verify(quizRepository, times(1)).delete(quiz);
-    }
-
-    @Test
-    void testDelete_NotFound() {
-        when(quizRepository.findById(quizId)).thenReturn(Optional.empty());
-
-        assertThrows(ResourceNotFoundException.class, () -> quizService.delete(quizId.toString()));
-    }
-
-    @Test
-    void testSubmitAttempt_Success() {
-        QuizAttempt attempt = QuizAttempt.builder()
-                .quiz(quiz)
-                .user(user)
-                .score(80.0)
-                .timeSpent(600L)
-                .completionDate(LocalDateTime.now())
-                .build();
-
-        when(quizRepository.findById(quizId)).thenReturn(Optional.of(quiz));
-        when(userService.getCurrentUser()).thenReturn(user);
-        when(quizAttemptRepository.save(any(QuizAttempt.class))).thenReturn(attempt);
-
-        QuizAttemptDTO result = quizService.submitAttempt(quizId.toString(), 80.0, 600L);
-
-        assertNotNull(result);
-        verify(quizAttemptRepository, times(1)).save(any(QuizAttempt.class));
+        assertThrows(ResourceNotFoundException.class, () -> quizService.delete(quizId));
     }
 }
