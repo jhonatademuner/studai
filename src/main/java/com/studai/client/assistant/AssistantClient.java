@@ -40,7 +40,6 @@ public class AssistantClient {
 	private HttpHeaders createHeaders(Map<String, String> additionalHeaders) {
 		HttpHeaders headers = new HttpHeaders();
 		headers.setContentType(MediaType.APPLICATION_JSON);
-		headers.set("Authorization", "Bearer " + assistantProperties.getOpenaiApiKey());
 
 		if (additionalHeaders != null) {
 			additionalHeaders.forEach(headers::set);

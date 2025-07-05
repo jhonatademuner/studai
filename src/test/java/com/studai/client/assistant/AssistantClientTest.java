@@ -29,7 +29,6 @@ class AssistantClientTest {
 
 		AssistantProperties props = new AssistantProperties();
 		props.setBaseUri(mockWebServer.url("/api/").toString());
-		props.setOpenaiApiKey("dummy-api-key");
 
 		RestTemplate restTemplate = new RestTemplate();
 		restTemplate.setErrorHandler(new NoOpResponseErrorHandler()); // 👈 prevents exceptions on 4xx/5xx
@@ -53,11 +52,10 @@ class AssistantClientTest {
 
 		Map<String, String> body = Map.of("prompt", "Hi!");
 		Map<String, String> headers = Map.of("Custom-Header", "Value");
-		Map<String, String> params = Map.of("lang", "en");
 
 		// When
 		ResponseEntity<TestResponse> response = assistantClient.postRequest(
-				"chat", body, headers, params, TestResponse.class
+				"quizzes", body, headers, null, TestResponse.class
 		);
 
 		// Then
@@ -68,8 +66,7 @@ class AssistantClientTest {
 		// And: verify request details
 		RecordedRequest recorded = mockWebServer.takeRequest();
 		assertThat(recorded.getMethod()).isEqualTo("POST");
-		assertThat(recorded.getPath()).isEqualTo("/api/chat?lang=en");
-		assertThat(recorded.getHeader("Authorization")).isEqualTo("Bearer dummy-api-key");
+		assertThat(recorded.getPath()).isEqualTo("/api/quizzes");
 		assertThat(recorded.getHeader("Custom-Header")).isEqualTo("Value");
 		assertThat(recorded.getHeader("Content-Type")).contains("application/json");
 
