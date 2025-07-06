@@ -12,5 +12,6 @@ import org.springframework.stereotype.Component;
 public class AssistantProperties {
 
     private String baseUri;
+    private String securityKey;
 
 }

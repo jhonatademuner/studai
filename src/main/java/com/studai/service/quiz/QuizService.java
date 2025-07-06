@@ -54,7 +54,7 @@ public class QuizService {
 
     private QuizDTO generateQuiz(QuizCreateDTO quizCreateDTO) {
         Map<String, String> headers = Map.of("Connection", "keep-alive");
-        return assistantClient.postRequest("/quiz", quizCreateDTO, headers, null, QuizDTO.class).getBody();
+        return assistantClient.postRequest("/api/v1/quizzes", quizCreateDTO, headers, null, QuizDTO.class).getBody();
     }
 
     private void fillQuizAdditionalFields(QuizDTO quizDTO, QuizCreateDTO quizCreateDTO) {
@@ -62,7 +62,5 @@ public class QuizService {
         quizDTO.setSourceType(quizCreateDTO.getSourceType());
         quizDTO.setLanguageCode(quizCreateDTO.getLanguageCode());
     }
-
-
 
 }
