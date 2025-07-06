@@ -2,7 +2,6 @@ package com.studai.config;
 
 import com.studai.config.filter.JWTFilter;
 import com.studai.service.user.StudaiUserDetailsService;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.authentication.AuthenticationManager;
@@ -44,7 +43,7 @@ public class SecurityConfig {
                 .requestMatchers(
                     "/api/v1/register",
                     "/api/v1/login",
-                    "/api/v1/quiz/guest/attempt",
+                    "/api/v1/guest/**",
                     "/swagger-ui/**",
                     "/v3/api-docs/**",
                     "/webjars/**"

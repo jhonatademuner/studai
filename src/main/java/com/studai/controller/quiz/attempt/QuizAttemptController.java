@@ -24,7 +24,7 @@ public class QuizAttemptController {
 		return ResponseEntity.status(HttpStatus.CREATED).body(attempt);
 	}
 
-	@PostMapping("/v1/quiz/guest/attempt")
+	@PostMapping("/v1/guest/quiz/attempt")
 	public ResponseEntity<QuizAttemptDTO> guestCreate(@RequestBody QuizAttemptCreateDTO createDTO) {
 		QuizAttemptDTO attempt = quizAttemptService.create(createDTO, true);
 		return ResponseEntity.status(HttpStatus.CREATED).body(attempt);
