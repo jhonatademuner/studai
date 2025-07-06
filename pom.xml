@@ -10,7 +10,7 @@
     </parent>
     <groupId>com.studai</groupId>
     <artifactId>studai</artifactId>
-    <version>0.0.1-SNAPSHOT</version>
+    <version>0.0.1</version>
     <name>studai</name>
     <description>Backend for the StudAI project</description>
     <url/>

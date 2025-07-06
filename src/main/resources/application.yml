@@ -33,5 +33,5 @@ jwt:
   audience: studai-client
 
 assistant:
-  base-uri: http://127.0.0.1:8000/api
-  openai-api-key: sk-xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+  base-uri: http://127.0.0.1:8000
+  security-key: dev_key
