@@ -63,7 +63,7 @@ class QuizServiceTest {
         Quiz entity = new Quiz();
         entity.setId(quizId);
 
-        when(assistantClient.postRequest(anyString(), any(), anyMap(), isNull(), eq(QuizDTO.class)))
+        when(assistantClient.postRequest(anyString(), any(), isNull(), isNull(), eq(QuizDTO.class)))
                 .thenReturn(ResponseEntity.ok(generatedDTO));
         when(quizAssembler.toEntity(generatedDTO)).thenReturn(entity);
         when(quizRepository.save(entity)).thenReturn(entity);
