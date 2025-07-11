@@ -1,72 +1,111 @@
-# StudAI - AI Powered Quiz Creator
+# Studai - AI Powered Quiz Creator
 
-This repository contains the **general backend** for the **StudAI** project, which powers an AI-driven quiz creation platform. The backend handles core functionalities like data persistence, and user authentication. Quiz generation is offloaded to the [studai-assistant](https://github.com/kenzokomati/studai-assistant) microservice, accessed seamlessly through this backend.
+![Java](https://img.shields.io/badge/java-21-blue)
+![Spring Boot](https://img.shields.io/badge/Spring_Boot-3.3.4-brightgreen)
+![PostgreSQL](https://img.shields.io/badge/PostgreSQL-16-blue)
+[![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](LICENSE.txt)
 
----
+This repository contains the **backend service** for the Studai project, an AI-driven quiz creation platform. The backend handles core functionalities including user authentication, quiz management, and integration with the [studai-assistant](https://github.com/kenzokomati/studai-assistant) microservice for quiz generation.
 
-## Features
+## ✨ Key Features
+- **JWT Authentication** - Secure user management with role-based access control
+- **Quiz Management** - Create, retrieve, and delete quizzes from various sources
+- **Attempt Tracking** - Record quiz attempts with scoring and time tracking
+- **Database Migrations** - Automatic schema management with Flyway
+- **API Documentation** - Interactive Swagger UI for endpoint exploration
 
-- **Data Persistence**: Manages application data efficiently using a PostgreSQL database.
-- **User Authentication**: Implements secure user authentication and authorization with Spring Security.
-- **Quiz Generation Integration**: Interfaces with the [studai-assistant](https://github.com/kenzokomati/studai-assistant) microservice for generating AI-powered quizzes.
+## 🚀 Technology Stack
+- **Java 21** - Core application language
+- **Spring Boot 3.3.4** - Application framework
+- **PostgreSQL** - Primary database
+- **Flyway** - Database migration management
+- **JWT** - Stateless authentication
+- **Docker** - Containerization and deployment
 
----
+## 📂 Project Structure
+```plaintext
+studai/
+├── src/
+│   ├── main/java/com/studai
+│   │   ├── client/             # Microservice communication
+│   │   ├── config/             # Security and application configuration
+│   │   ├── controller/         # API endpoints
+│   │   ├── domain/             # Data models and DTOs
+│   │   ├── repository/         # Database access layer
+│   │   ├── service/            # Business logic
+│   │   └── utils/              # Helper classes and exception handling
+│   ├── resources/
+│   │   └── db/migration        # Database schema migrations
+├── test/                       # Comprehensive test suite
+├── Dockerfile                  # Container configuration
+├── docker-compose.yml          # Local development setup
+└── mvnw                        # Maven wrapper
+```
 
-## Getting Started
+## 🛠️ Getting Started
+### Prerequisites
+- Java 21 JDK
+- Docker and Docker Compose
+- Maven (optional - wrapper included)
 
-### 1. Clone the repository:
-
-After forking the repository, you can clone it to your local machine using the following commands:
-
+### Local Setup
+#### 1. Clone the repository:
 ```bash
 git clone https://github.com/jhoonatademuner/studai.git
 cd studai
 ```
 
-### 2. Database Setup:
-
-To set up the PostgreSQL database, you can use the official PostgreSQL Docker image. For example, run the following commands:
-
+#### 2. Start PostgreSQL database:
 ```bash
-docker run --name studai-db -e POSTGRES_USER=root -e POSTGRES_PASSWORD=root -e POSTGRES_DB=studai -p 5433:5432 -d postgres:16
+docker-compose up -d
 ```
 
-### 3. Build the project:
-
-If Maven is installed on your machine, run the following command to build the project:
-
+### 3. Build and run the application:
 ```bash
-mvn clean install
+./mvnw spring-boot:run # or "mvn spring-boot:run" to use the global Maven
 ```
 
-Alternatively, if Maven is not installed, you can use the provided Maven wrapper:
+The application will be available at `http://localhost:5000`
 
-```bash
-./mvnw clean install
+### Configuration
+Environment variables can be configured in `src/main/resources/application.yml`:
+```yml
+spring:
+  datasource:
+    url: jdbc:postgresql://localhost:5432/devdb
+    username: devuser
+    password: devpassword
+
+assistant:
+  base-uri: http://127.0.0.1:8000  # studai-assistant service
+  security-key: dev_key
 ```
 
-### 4. Run the application:
+## 🌐 API Documentation
 
-To run the application using Maven, execute the following command:
+Interactive API documentation is available at:
+`http://localhost:5000/swagger-ui/index.html`
 
-```bash
-mvn spring-boot:run
-```
-
-If you are using the Maven wrapper, run:
+## 🐳 Docker Deployment
+Build and run as a Docker container:
 
 ```bash
-./mvnw spring-boot:run
+# Build JAR file
+./mvnw clean package # or "mvn clean package" to use the global Maven
+
+# Build Docker image
+docker build -t studai-backend .
+
+# Run container
+docker run -d -p 5000:5000 --name studai studai-backend
 ```
 
-### 5. Access the API:
+## ✅ Running Tests
+Run all unit and integration tests:
+```bash
+./mvnw test # or "mvn test" to use the global Maven
+```
 
-The API will be available at `http://localhost:8080`. You can use tools like Postman or `curl` to test the available endpoints.
-
-To view all available endpoints, visit: `http://localhost:8080/swagger-ui/index.html`.
-
----
-
-## License
+## 📜 License
 
 This project is licensed under the MIT License - see the [LICENSE](LICENSE.txt) file for details.
