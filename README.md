@@ -62,7 +62,7 @@ docker-compose up -d
 
 ### 3. Build and run the application:
 ```bash
-./mvnw spring-boot:run # or "mvn spring-boot:run" to use the global Maven
+./mvnw spring-boot:run 
 ```
 
 The application will be available at `http://localhost:5000`
@@ -86,24 +86,10 @@ assistant:
 Interactive API documentation is available at:
 `http://localhost:5000/swagger-ui/index.html`
 
-## 🐳 Docker Deployment
-Build and run as a Docker container:
-
-```bash
-# Build JAR file
-./mvnw clean package # or "mvn clean package" to use the global Maven
-
-# Build Docker image
-docker build -t studai-backend .
-
-# Run container
-docker run -d -p 5000:5000 --name studai studai-backend
-```
-
 ## ✅ Running Tests
 Run all unit and integration tests:
 ```bash
-./mvnw test # or "mvn test" to use the global Maven
+./mvnw test 
 ```
 
 ## 📜 License
