@@ -3,7 +3,7 @@
 ![Java](https://img.shields.io/badge/java-21-blue)
 ![Spring Boot](https://img.shields.io/badge/Spring_Boot-3.3.4-brightgreen)
 ![PostgreSQL](https://img.shields.io/badge/PostgreSQL-16-blue)
-[![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](LICENSE.txt)
+[![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](LICENSE)
 
 This repository contains the **backend service** for the Studai project, an AI-driven quiz creation platform. The backend handles core functionalities including user authentication, quiz management, and integration with the [studai-assistant](https://github.com/kenzokomati/studai-assistant) microservice for quiz generation.
 
@@ -94,4 +94,4 @@ Run all unit and integration tests:
 
 ## 📜 License
 
-This project is licensed under the MIT License - see the [LICENSE](LICENSE.txt) file for details.
+This project is licensed under the MIT License - see the [LICENSE](LICENSE) file for details.
