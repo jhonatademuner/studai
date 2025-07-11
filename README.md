@@ -51,7 +51,7 @@ studai/
 ### Local Setup
 #### 1. Clone the repository:
 ```bash
-git clone https://github.com/jhoonatademuner/studai.git
+git clone https://github.com/jhonatademuner/studai.git
 cd studai
 ```
 
