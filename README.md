@@ -60,7 +60,7 @@ cd studai
 docker-compose up -d
 ```
 
-### 3. Build and run the application:
+#### 3. Build and run the application:
 ```bash
 ./mvnw spring-boot:run 
 ```
@@ -68,7 +68,7 @@ docker-compose up -d
 The application will be available at `http://localhost:5000`
 
 ### Configuration
-Environment variables can be configured in `src/main/resources/application.yml`:
+Application properties can be configured in `src/main/resources/application.yml`:
 ```yml
 spring:
   datasource:
